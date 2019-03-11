@@ -6,7 +6,7 @@
 To avoid non-responsive queries, they are splitted into
 smaller queries withat most \code{max_keys} items per query field.}
 \usage{
-query_uniprot(query = NULL, columns = c("id", "keywords"),
+query_uniprot(query = NULL, columns = c("id", "genes", "reviewed"),
   max_keys = 400)
 }
 \arguments{

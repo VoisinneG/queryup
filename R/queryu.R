@@ -70,7 +70,7 @@ get_uniprot_data <- function(query = NULL, columns = c("id", "keywords")){
 #' @param max_keys maximum number of field items submitted
 #' @return a data.frame
 #' @export
-query_uniprot <- function(query = NULL, columns = c("id", "keywords"), max_keys = 400 ){
+query_uniprot <- function(query = NULL, columns = c("id", "genes", "reviewed"), max_keys = 400 ){
 
   for ( i in 1:length(query)){
 
