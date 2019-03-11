@@ -36,7 +36,7 @@ get_uniprot_data <- function(query = NULL, columns = c("id", "keywords")){
                       '&format=tab&columns=', cols,
                       sep = "")
 
-    cat(paste("Querying uniprot...\n",sep=""))
+    message(paste("Querying uniprot...\n",sep=""))
 
     df <- tryCatch({
       read.table(full_url,
@@ -70,7 +70,7 @@ get_uniprot_data <- function(query = NULL, columns = c("id", "keywords")){
 #' @param max_keys maximum number of field items submitted
 #' @return a data.frame
 #' @export
-query_uniprot <- function(query = NULL, columns = c("id", "genes", "reviewed"), max_keys = 400 ){
+query_uniprot <- function(query = NULL, columns = c("id", "genes", "organism", "reviewed" ), max_keys = 400 ){
 
   for ( i in 1:length(query)){
 

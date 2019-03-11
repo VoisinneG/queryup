@@ -6,8 +6,8 @@
 To avoid non-responsive queries, they are splitted into
 smaller queries withat most \code{max_keys} items per query field.}
 \usage{
-query_uniprot(query = NULL, columns = c("id", "genes", "reviewed"),
-  max_keys = 400)
+query_uniprot(query = NULL, columns = c("id", "genes", "organism",
+  "reviewed"), max_keys = 400)
 }
 \arguments{
 \item{query}{list of keys corresponding to uniprot's query fields. For example :
