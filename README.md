@@ -1,3 +1,6 @@
+queryup R package
+=================
+
 Description
 -----------
 
@@ -14,6 +17,31 @@ Installation
 Install the package from github using devtools:
 
     devtools::install_github("VoisinneG/queryup")
+
+    ##   
+       checking for file ‘/private/var/folders/lb/_mx1mdmx5ns8h8vf9vdff1jc0000gn/T/RtmpPEefaM/remotesfca976e3278f/VoisinneG-queryup-c6710e3/DESCRIPTION’ ...
+      
+    ✔  checking for file ‘/private/var/folders/lb/_mx1mdmx5ns8h8vf9vdff1jc0000gn/T/RtmpPEefaM/remotesfca976e3278f/VoisinneG-queryup-c6710e3/DESCRIPTION’
+    ## 
+      
+    ─  preparing ‘queryup’:
+    ##    checking DESCRIPTION meta-information ...
+      
+    ✔  checking DESCRIPTION meta-information
+    ## 
+      
+    ─  checking for LF line-endings in source and make files and shell scripts
+    ## 
+      
+    ─  checking for empty or unneeded directories
+    ## 
+      
+    ─  building ‘queryup_0.1.0.tar.gz’
+    ## 
+      
+       
+    ## 
+
     library(queryup)
 
 Queries

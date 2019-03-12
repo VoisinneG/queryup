@@ -9,6 +9,7 @@ date: "`r format(Sys.time(), '%Y - %m - %d')`"
 library(knitr)
 knitr::opts_chunk$set(echo = TRUE)
 ```
+# queryup R package
 
 ## Description 
 
