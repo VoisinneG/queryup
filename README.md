@@ -1,18 +1,30 @@
-queryup R package
-=================
-
-Description
------------
+queryup
+=======
 
 The `queryup` R package aims to facilitate retrieving information from
 the UniProt database using R. Programmatic access to the UniProt
 database is peformed by submitting queries to the [UniProt website REST
-API](https://www.uniprot.org/help/api_queries). Queries combine
-different fields to identify matching database entries. Here, queries
-are submitted using the function `query_uniprot()`.
+API](https://www.uniprot.org/help/api_queries).
 
-Installation
-------------
+Table of contents
+-----------------
+
+[Install](#install)
+
+[Queries](#queries)
+
+[Columns](#columns)
+
+[Combining query fields](#combining-query-fields)
+
+[Multiple items per query field](#multiple-items-per-query-field)
+
+[List of available query fields](#list-of-available-query-fields)
+
+[List of available data columns](#list-of-available-data-columns)
+
+Install
+-------
 
 Install the package from github using devtools:
 
@@ -22,9 +34,11 @@ Install the package from github using devtools:
 Queries
 -------
 
-In the `queryup` R package, a query must be formattted as a list
-containing character vectors named after existing UniProt fields. The
-list of all available fields along with example queries is shown
+Queries combine different fields to identify matching database entries.
+Here, queries are submitted using the function `query_uniprot()`. In the
+`queryup` R package, a query must be formattted as a list containing
+character vectors named after existing UniProt fields. The list of all
+available fields along with example queries is shown
 [here](#list-of-available-query%20fields). Different query fields must
 be matched simultaneously. This query will return the UniProt ids of all
 proteins encoded by gene *Pik3r1*.
