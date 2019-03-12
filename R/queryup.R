@@ -17,26 +17,31 @@
 #'
 #' #Lists all entries describing interactions with the protein described by entry P00520.
 #' df <- get_uniprot_data(query = list("interactor" = "P00520"), columns = cols)
-get_uniprot_data <- function(query = NULL, columns = c("id", "keywords")){
+get_uniprot_data <- function(query = NULL, columns = c("id", "organism", "reviewed" )){
 
   df <- NULL
 
   if(!is.null(query)){
+    if(typeof(query) == "list"){
+      formatted_queries <- sapply(1:length(query),
+                                  function(x){paste(names(query)[x], ":(",
+                                                    paste(query[[x]], collapse = "+or+"), ")",
+                                                    sep ="")})
 
-    formatted_queries <- sapply(1:length(query),
-                                function(x){paste(names(query)[x], ":(",
-                                                  paste(query[[x]], collapse = "+or+"), ")",
-                                                  sep ="")})
-
-    url <- 'https://www.uniprot.org/uniprot/?query='
-    full_query <- paste(formatted_queries, collapse = "+and+")
-
+      url <- 'https://www.uniprot.org/uniprot/?query='
+      full_query <- paste(formatted_queries, collapse = "+and+")
+    }else if(typeof(query) == "character"){
+      full_query <- query
+    }else{
+      message("Query not supported")
+      return(NULL)
+    }
     cols <- tolower(paste(columns, collapse = ","))
     full_url <- paste('https://www.uniprot.org/uniprot/?query=', full_query,
                       '&format=tab&columns=', cols,
                       sep = "")
 
-    message(paste("Querying uniprot...\n",sep=""))
+    message(paste("Querying the UniProt database...\n",sep=""))
 
     df <- tryCatch({
       read.table(full_url,
@@ -70,29 +75,33 @@ get_uniprot_data <- function(query = NULL, columns = c("id", "keywords")){
 #' @param max_keys maximum number of field items submitted
 #' @return a data.frame
 #' @export
-query_uniprot <- function(query = NULL, columns = c("id", "genes", "organism", "reviewed" ), max_keys = 400 ){
+query_uniprot <- function(query = NULL, columns = c("id", "organism", "reviewed" ), max_keys = 400 ){
 
-  for ( i in 1:length(query)){
+  if(typeof(query) == "list"){
 
-    if(length(query[[i]]) > max_keys){
+    for ( i in 1:length(query)){
 
-      query_split <- vector("list", 2)
+      if(length(query[[i]]) > max_keys){
 
-      query_split[[1]] <- query
-      query_split[[2]] <- query
+        query_split <- vector("list", 2)
 
-      query_split[[1]][[i]] <- query[[i]][1:max_keys]
-      query_split[[2]][[i]] <- query[[i]][(max_keys+1):length(query[[i]])]
+        query_split[[1]] <- query
+        query_split[[2]] <- query
 
-      #query_split[[1]] <- split_query(query_split[[1]], max_keys = max_keys)
-      #query_split[[2]] <- split_query(query_split[[2]], max_keys = max_keys)
+        query_split[[1]][[i]] <- query[[i]][1:max_keys]
+        query_split[[2]][[i]] <- query[[i]][(max_keys+1):length(query[[i]])]
 
-      df_list <- lapply(query_split, query_uniprot, columns = columns, max_keys = max_keys)
+        #query_split[[1]] <- split_query(query_split[[1]], max_keys = max_keys)
+        #query_split[[2]] <- split_query(query_split[[2]], max_keys = max_keys)
 
-      return(do.call(rbind, df_list))
+        df_list <- lapply(query_split, query_uniprot, columns = columns, max_keys = max_keys)
 
+        return(do.call(rbind, df_list))
+
+      }
     }
   }
+
 
   return( get_uniprot_data(query, columns = columns) )
 
