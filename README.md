@@ -1,8 +1,8 @@
 [![Travis-CI Build
 Status](https://travis-ci.org/VoisinneG/queryup.svg?branch=master)](https://travis-ci.org/VoisinneG/queryup)
 
-queryup
-=======
+R package : queryup
+===================
 
 The `queryup` R package aims to facilitate retrieving information from
 the UniProt database using R. Programmatic access to the UniProt
@@ -47,14 +47,14 @@ Columns
 
 By default, `query_uniprot()` returns a dataframe with protein ids, gene
 names, organism and Swiss-Prot review status. You can choose which data
-columns to retrieve using the `columns` parameter. See this
-[section](#list-of-available-data-columns) for all availbale UniProt
-data columns.
+columns to retrieve using the `columns` parameter.
 
     df <- query_uniprot(query, columns = c("id", "sequence", "keywords"))
 
-Note that the parameter `column` and the name of the corresponding
-column in the output dataframe do not necessarily match.
+See this [section](#list-of-available-data-columns) for all availbale
+UniProt data columns. Note that the parameter `column` and the name of
+the corresponding column in the output dataframe do not necessarily
+match.
 
     names(df)
 
@@ -106,7 +106,9 @@ musculus* (taxon: 10090) or *Homo sapiens* (taxon: 9606):
 List of available query fields
 ------------------------------
 
-Here is the list of all query fields available:
+You can view all query fields available using:
+
+    list_query_fields()
 
     ##  [1] "accession"         "active"            "annotation"       
     ##  [4] "author"            "cdantigen"         "citation"         
@@ -130,8 +132,9 @@ detailed description and example queries for each field.
 List of available data columns
 ------------------------------
 
-Here is the list of all data columns retrieveable using parameter
-`columns`.
+You can view all data columns retrieveable using :
+
+    list_data_columns()
 
     ##   [1] "id"                                      
     ##   [2] "entry name"                              

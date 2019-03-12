@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 [![Travis-CI Build Status](https://travis-ci.org/VoisinneG/queryup.svg?branch=master)](https://travis-ci.org/VoisinneG/queryup) 
 
-# queryup
+# R package : queryup
 
 The `queryup` R package aims to facilitate retrieving information from the UniProt database using R.
 Programmatic access to the UniProt database is peformed by submitting queries to the [UniProt website REST API](https://www.uniprot.org/help/api_queries).
@@ -37,13 +37,14 @@ summary(df)
 
 ## Columns
 
-By default, `query_uniprot()` returns a dataframe with  protein ids, gene names, organism and Swiss-Prot review status. You can choose which data columns to retrieve using the `columns` parameter. See this [section](#list-of-available-data-columns) for all availbale UniProt data columns.
+By default, `query_uniprot()` returns a dataframe with  protein ids, gene names, organism and Swiss-Prot review status. You can choose which data columns to retrieve using the `columns` parameter. 
 
 ```{r message=FALSE, warnings=FALSE}
 df <- query_uniprot(query, columns = c("id", "sequence", "keywords"))
 
 ```
 
+See this [section](#list-of-available-data-columns) for all availbale UniProt data columns.
 Note that the parameter `column` and the name of the corresponding column in the output dataframe do not necessarily match.
 
 ```{r}
@@ -74,41 +75,20 @@ print(df)
 
 ## List of available query fields
 
-```{r include=FALSE}
-library(XML)
-library(RCurl)
-library(rlist)
-theurl <- getURL('https://www.uniprot.org/help/query-fields',.opts = list(ssl.verifypeer = FALSE) )
-tables <- readHTMLTable(theurl, stringsAsFactors = FALSE)
-tables <- list.clean(tables, fun = is.null, recursive = FALSE)
-data <- tables[[1]]
-for(i in 1:length(names(data))){
-  data[[i]] <- gsub("\r\n", " //", data[[i]], fixed = TRUE)
-}
-```
+You can view all query fields available using: 
 
-Here is the list of all query fields available: 
-
-```{r echo = FALSE}
-print(data$Field)
+```{r}
+list_query_fields()
 ```
 
 See [here](https://www.uniprot.org/help/query-fields) for a more detailed description and example queries for each field.
 
 ## List of available data columns
 
-```{r include = FALSE}
-theurl_col <- getURL('https://www.uniprot.org/help/uniprotkb_column_names',.opts = list(ssl.verifypeer = FALSE) )
-tables_col <- readHTMLTable(theurl_col, stringsAsFactors = FALSE)
-tables_col <- list.clean(tables_col, fun = is.null, recursive = FALSE)
-data_col <- do.call(rbind, tables_col)
-row.names(data_col) <- NULL
-```
+You can view all data columns retrieveable using : 
 
-Here is the list of all data columns retrieveable using parameter `columns`. 
-
-```{r echo = FALSE}
-print(data_col$`Column names as displayed in URL`)
+```{r}
+list_data_columns()
 ```
 
 Note that the parameter `columns` and the name of the corresponding column in the output dataframe do not necessarily match. See [here](https://www.uniprot.org/help/uniprotkb_column_names) for a more detailed description.
