@@ -9,27 +9,13 @@ date: "`r format(Sys.time(), '%Y - %m - %d')`"
 library(knitr)
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+[![Travis-CI Build Status](https://travis-ci.org/VoisinneG/queryup.svg?branch=master)](https://travis-ci.org/VoisinneG/queryup) 
+
 # queryup
 
 The `queryup` R package aims to facilitate retrieving information from the UniProt database using R.
 Programmatic access to the UniProt database is peformed by submitting queries to the [UniProt website REST API](https://www.uniprot.org/help/api_queries).
-
-## Table of contents
-
-[Install](#install)
-
-[Queries](#queries)
-
-[Columns](#columns)
-
-[Combining query fields](#combining-query-fields)
-
-[Multiple items per query field](#multiple-items-per-query-field)
-
-[List of available query fields](#list-of-available-query-fields)
-
-[List of available data columns](#list-of-available-data-columns)
-
 
 ## Install
 
