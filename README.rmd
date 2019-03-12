@@ -1,0 +1,96 @@
+---
+title: "R package: queryu"
+author: "Guillaume Voisinne"
+output: md_document
+date: "`r format(Sys.time(), '%Y - %m - %d')`"
+---
+
+```{r include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# R package : queryup 
+
+This package aims to facilitate retrieving information from the uniprot database using R.
+Programmatic access to the uniprot database is peformed by submitting queries to the uniprot REST API.
+Queries combine different fields to identify matching database entries. Here, queries are submitted using the function `query_uniprot()`.
+
+## Installation
+
+Install the package from github using devtools:
+```{r message=FALSE, warnings=FALSE}
+devtools::install_github("VoisinneG/queryup")
+library(queryup)
+```
+## Queries
+
+A query is a list containing character vectors named after existing uniprot fields. The list of all available fileds is shown below. Different query fields must be matched simultaneously. This query will return the uniprot ids of all proteins encoded by gene *Pik3r1*. 
+```{r message=FALSE, warnings=FALSE}
+query <- list( "gene_exact" = "Pik3r1" )
+df <- query_uniprot(query, columns = "id")
+```
+
+```{r echo = FALSE}
+summary(df)
+```
+We can retrieve additionnal data using the `columns` parameter.
+```{r message=FALSE, warnings=FALSE}
+df <- query_uniprot(query, columns = c("id", "genes", "reviewed", "organism"))
+summary(df)
+```
+
+## Combining query fields
+Our first query returned many matches. We can build more specific queries by using more than one query field. By default, matching entries must satisfy all query fields simultaneously.
+```{r message=FALSE, warnings=FALSE}
+query <- list( "gene_exact" = "Pik3r1", "reviewed" = "yes", "organism" = "9606" )
+df <- query_uniprot(query, columns = c("id", "genes", "organism", "reviewed"))
+summary(df)
+```
+
+## Multiple items per query field
+
+It is also possible to looked for entries that match different items within a query field. Items from a given query field are looked for independently. The following query will return all proteins encoded by either *Pik3r1* or *Pik3r2* in either *Mus musculus* (taxon: 10060) or *Homo sapiens* (taxon: 9606): 
+Hence
+```{r}
+query <- list( "gene_exact" = c("Pik3r1", "Pik3r2"), "organism" = c("9606", "10060"))
+df <- query_uniprot(query, columns = "id")
+summary(df)
+```
+
+
+## List of all available query fields
+
+```{r include=FALSE}
+library(XML)
+library(RCurl)
+library(rlist)
+theurl <- getURL('https://www.uniprot.org/help/query-fields',.opts = list(ssl.verifypeer = FALSE) )
+tables <- readHTMLTable(theurl, stringsAsFactors = FALSE)
+tables <- list.clean(tables, fun = is.null, recursive = FALSE)
+data <- tables[[1]]
+for(i in 1:length(names(data))){
+  data[[i]] <- gsub("\r\n", " //", data[[i]], fixed = TRUE)
+}
+```
+
+Here is the list of all query fields available
+```{r echo = FALSE}
+kable(data)
+```
+
+## List of all unirot data columns
+
+```{r include = FALSE}
+theurl_col <- getURL('https://www.uniprot.org/help/uniprotkb_column_names',.opts = list(ssl.verifypeer = FALSE) )
+tables_col <- readHTMLTable(theurl_col, stringsAsFactors = FALSE)
+tables_col <- list.clean(tables_col, fun = is.null, recursive = FALSE)
+data_col <- do.call(rbind, tables_col)
+row.names(data_col) <- NULL
+```
+
+Here is the list of all data columns retrieveable using parameter `column`. Note that the parameter `column` and the name of the corresponding column in the dataframe (output of `query_uniprot()`) do not necessarily match.
+
+```{r echo = FALSE}
+kable(data_col)
+```
