@@ -1,37 +1,32 @@
-[![Travis-CI Build
-Status](https://travis-ci.org/VoisinneG/queryup.svg?branch=master)](https://travis-ci.org/VoisinneG/queryup)
+R package: queryup
+================
+Guillaume Voisinne
+2019 - 03 - 12
 
-R package : queryup
-===================
+[![Travis-CI Build Status](https://travis-ci.org/VoisinneG/queryup.svg?branch=master)](https://travis-ci.org/VoisinneG/queryup)
 
-The `queryup` R package aims to facilitate retrieving information from
-the UniProt database using R. Programmatic access to the UniProt
-database is peformed by submitting queries to the [UniProt website REST
-API](https://www.uniprot.org/help/api_queries).
+The `queryup` R package aims to facilitate retrieving information from the UniProt database using R. Programmatic access to the UniProt database is peformed by submitting queries to the [UniProt website REST API](https://www.uniprot.org/help/api_queries).
 
 Install
 -------
 
 Install the package from github using devtools:
 
-    devtools::install_github("VoisinneG/queryup")
-    library(queryup)
+``` r
+devtools::install_github("VoisinneG/queryup")
+library(queryup)
+```
 
 Queries
 -------
 
-Queries combine different fields to identify matching database entries.
-Here, queries are submitted using the function `query_uniprot()`. In the
-`queryup` R package, a query must be formattted as a list containing
-character vectors named after existing UniProt fields. The list of all
-available fields along with example queries is shown
-[here](#list-of-available-query%20fields). Different query fields must
-be matched simultaneously. This query will return the UniProt ids of all
-proteins encoded by gene *Pik3r1*.
+Queries combine different fields to identify matching database entries. Here, queries are submitted using the function `query_uniprot()`. In the `queryup` R package, a query must be formattted as a list containing character vectors named after existing UniProt fields. The list of all available fields along with example queries is shown [here](#list-of-available-query%20fields). Different query fields must be matched simultaneously. This query will return the UniProt ids of all proteins encoded by gene *Pik3r1*.
 
-    query <- list( "gene_exact" = "Pik3r1" )
-    df <- query_uniprot(query, columns = c("id", "genes"))
-    summary(df)
+``` r
+query <- list( "gene_exact" = "Pik3r1" )
+df <- query_uniprot(query, columns = c("id", "genes"))
+summary(df)
+```
 
     ##         Entry                     Gene.names 
     ##  A0A087WQM2:  1   PIK3R1               :214  
@@ -45,41 +40,42 @@ proteins encoded by gene *Pik3r1*.
 Columns
 -------
 
-By default, `query_uniprot()` returns a dataframe with protein ids, gene
-names, organism and Swiss-Prot review status. You can choose which data
-columns to retrieve using the `columns` parameter.
+By default, `query_uniprot()` returns a dataframe with protein ids, gene names, organism and Swiss-Prot review status. You can choose which data columns to retrieve using the `columns` parameter.
 
-    df <- query_uniprot(query, columns = c("id", "sequence", "keywords"))
+``` r
+df <- query_uniprot(query, columns = c("id", "sequence", "keywords"))
+```
 
-See this [section](#list-of-available-data-columns) for all availbale
-UniProt data columns. Note that the parameter `column` and the name of
-the corresponding column in the output dataframe do not necessarily
-match.
+See this [section](#list-of-available-data-columns) for all availbale UniProt data columns. Note that the parameter `column` and the name of the corresponding column in the output dataframe do not necessarily match.
 
-    names(df)
+``` r
+names(df)
+```
 
     ## [1] "Entry"    "Sequence" "Keywords"
 
-    as.character(df$Sequence[1])
+``` r
+as.character(df$Sequence[1])
+```
 
     ## [1] "MSAEGYQYRALYDYKKEREEDIDLHLGDILTVNKGSLLALGFSEGEEAKPEEIGWLNGFNETTGERGDFPGTYVEYIGRKKISPPTPKPRPPRPLPVAPSPAKTESESEQQAFSLPDLTEQFTPPDVAPPILVKIVETIEKKGLEYSTLYGAQGSSSAVELRQIFECDASSSDLETFDVHTLSDALKRYILDLPNPIIPAAVYSDMISVAQEVQSSEEYAQLLKKLIRSPNIPPQYWLTLQYLLKHFLRVCQASSKNLLNARSLAEIFSPLLFKFQIASSDNTEHHIKILEVLITSEWNERQPVPALPPKPPKPNSVTNNSMNNNMSLQDAEWYWGDISREEVNEKLRDTADGTFLVRDASTKMHGDYTLTLRKGGNNKLIKIFHRDGKYGFSDPLTFNSVVELINHYRNESLAQYNPKLDVKLLYPVSKYQQDQVVKEDSIEAVGKKLHEYNTQFQEKSREYDRLYEDYTRTSQEIQMKRTAIEAFNETIKIFEEQCQTQERYSKEYIEKFKREGNDKEIQRIMHNYEKLKSRISEIVDSRRRLEEDLKKQAAEYREIDKRMNSIKPDLIQLRKTRDQYLMWLTQKGVRQKKLNEWLGNENAEDQYSMVEDDEDLPHHDERTWNVGNINRSQAENLLRGKRDGTFLVRESSKQGCYACSVVVDGEVKHCVINKTPTGYGFAEPYNLYNSLKELVLHYQHTSLVQHNDSLNVTLAYPVYAQQRR"
 
-    as.character(df$Keywords[1])
+``` r
+as.character(df$Keywords[1])
+```
 
     ## [1] "Coiled coil;Complete proteome;Reference proteome;SH2 domain;SH3 domain"
 
 Combining query fields
 ----------------------
 
-Our first query returned many matches. We can build more specific
-queries by using more than one query field. By default, matching entries
-must satisfy all query fields simultaneously. Let's retrieve the only
-Swiss-Prot reviewed protein entry encoded by gene *Pik3r1* in *Homo
-sapiens* (taxon: 9606):
+Our first query returned many matches. We can build more specific queries by using more than one query field. By default, matching entries must satisfy all query fields simultaneously. Let's retrieve the only Swiss-Prot reviewed protein entry encoded by gene *Pik3r1* in *Homo sapiens* (taxon: 9606):
 
-    query <- list( "gene_exact" = "Pik3r1", "reviewed" = "yes", "organism" = "9606" )
-    df <- query_uniprot(query)
-    print(df)
+``` r
+query <- list( "gene_exact" = "Pik3r1", "reviewed" = "yes", "organism" = "9606" )
+df <- query_uniprot(query)
+print(df)
+```
 
     ##    Entry  Gene.names             Organism   Status
     ## 1 P27986 PIK3R1 GRB1 Homo sapiens (Human) reviewed
@@ -87,15 +83,13 @@ sapiens* (taxon: 9606):
 Multiple items per query field
 ------------------------------
 
-It is also possible to look for entries that match different items
-within a single query field. Items from a given query field are looked
-for independently. Hence, the following query will return all Swiss-Prot
-reviewed proteins encoded by either *Pik3r1* or *Pik3r2* in either *Mus
-musculus* (taxon: 10090) or *Homo sapiens* (taxon: 9606):
+It is also possible to look for entries that match different items within a single query field. Items from a given query field are looked for independently. Hence, the following query will return all Swiss-Prot reviewed proteins encoded by either *Pik3r1* or *Pik3r2* in either *Mus musculus* (taxon: 10090) or *Homo sapiens* (taxon: 9606):
 
-    query <- list( "gene_exact" = c("Pik3r1", "Pik3r2"), "reviewed" = "yes", "organism" = c("9606", "10090"))
-    df <- query_uniprot(query)
-    print(df)
+``` r
+query <- list( "gene_exact" = c("Pik3r1", "Pik3r2"), "reviewed" = "yes", "organism" = c("9606", "10090"))
+df <- query_uniprot(query)
+print(df)
+```
 
     ##    Entry  Gene.names             Organism   Status
     ## 1 P26450      Pik3r1 Mus musculus (Mouse) reviewed
@@ -108,7 +102,9 @@ List of available query fields
 
 You can view all query fields available using:
 
-    list_query_fields()
+``` r
+list_query_fields()
+```
 
     ##  [1] "accession"         "active"            "annotation"       
     ##  [4] "author"            "cdantigen"         "citation"         
@@ -126,15 +122,16 @@ You can view all query fields available using:
     ## [40] "sequence_modified" "strain"            "taxonomy"         
     ## [43] "tissue"            "web"
 
-See [here](https://www.uniprot.org/help/query-fields) for a more
-detailed description and example queries for each field.
+See [here](https://www.uniprot.org/help/query-fields) for a more detailed description and example queries for each field.
 
 List of available data columns
 ------------------------------
 
 You can view all data columns retrieveable using :
 
-    list_data_columns()
+``` r
+list_data_columns()
+```
 
     ##   [1] "id"                                      
     ##   [2] "entry name"                              
@@ -311,7 +308,4 @@ You can view all data columns retrieveable using :
     ## [173] "database(db_abbrev)"                     
     ## [174] "database(EMBL)"
 
-Note that the parameter `columns` and the name of the corresponding
-column in the output dataframe do not necessarily match. See
-[here](https://www.uniprot.org/help/uniprotkb_column_names) for a more
-detailed description.
+Note that the parameter `columns` and the name of the corresponding column in the output dataframe do not necessarily match. See [here](https://www.uniprot.org/help/uniprotkb_column_names) for a more detailed description.
