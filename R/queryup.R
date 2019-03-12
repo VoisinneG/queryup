@@ -17,7 +17,7 @@
 #'
 #' #Lists all entries describing interactions with the protein described by entry P00520.
 #' df <- get_uniprot_data(query = list("interactor" = "P00520"), columns = cols)
-get_uniprot_data <- function(query = NULL, columns = c("id", "organism", "reviewed" )){
+get_uniprot_data <- function(query = NULL, columns = c("id", "genes", "organism", "reviewed" )){
 
   df <- NULL
 
@@ -75,7 +75,7 @@ get_uniprot_data <- function(query = NULL, columns = c("id", "organism", "review
 #' @param max_keys maximum number of field items submitted
 #' @return a data.frame
 #' @export
-query_uniprot <- function(query = NULL, columns = c("id", "organism", "reviewed" ), max_keys = 400 ){
+query_uniprot <- function(query = NULL, columns = c("id", "genes", "organism", "reviewed" ), max_keys = 400 ){
 
   if(typeof(query) == "list"){
 

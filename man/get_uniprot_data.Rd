@@ -4,7 +4,7 @@
 \alias{get_uniprot_data}
 \title{Retrieve data from uniprot using uniprot's REST API}
 \usage{
-get_uniprot_data(query = NULL, columns = c("id", "organism",
+get_uniprot_data(query = NULL, columns = c("id", "genes", "organism",
   "reviewed"))
 }
 \arguments{
