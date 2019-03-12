@@ -33,7 +33,7 @@ In the `queryup` R package, a query must be formattted as a list containing char
 
 ```r
 query <- list( "gene_exact" = "Pik3r1" )
-df <- query_uniprot(query)
+df <- query_uniprot(query, columns = c("id", "genes"))
 summary(df)
 ```
 
@@ -45,15 +45,7 @@ summary(df)
 ##  A0A0A9YVC8:  1   PIK3R1 A306_00009840 :  3  
 ##  A0A0B2UIC9:  1   PIK3R1 CK820_G0034249:  3  
 ##  A0A0B8S032:  1   pik3r1 LOC557176     :  2  
-##  (Other)   :259   (Other)              : 16  
-##                                          Organism          Status   
-##  Homo sapiens (Human)                        : 12   reviewed  :  5  
-##  Mus musculus (Mouse)                        :  8   unreviewed:260  
-##  Sus scrofa (Pig)                            :  8                   
-##  Nothobranchius rachovii (bluefin notho)     :  7                   
-##  Tarsius syrichta (Philippine tarsier)       :  7                   
-##  Nothobranchius furzeri (Turquoise killifish):  6                   
-##  (Other)                                     :217
+##  (Other)   :259   (Other)              : 16
 ```
 
 ##Columns
@@ -62,7 +54,7 @@ By default, `query_uniprot()` returns a dataframe with  protein ids, gene names,
 
 
 ```r
-df <- query_uniprot(query, columns = c("id", "sequence"))
+df <- query_uniprot(query, columns = c("id", "sequence", "keywords"))
 ```
 
 Note that the parameter `column` and the name of the corresponding column in the output dataframe do not necessarily match.
@@ -73,7 +65,7 @@ names(df)
 ```
 
 ```
-## [1] "Entry"    "Sequence"
+## [1] "Entry"    "Sequence" "Keywords"
 ```
 
 ```r
@@ -82,6 +74,14 @@ as.character(df$Sequence[1])
 
 ```
 ## [1] "MSAEGYQYRALYDYKKEREEDIDLHLGDILTVNKGSLLALGFSEGEEAKPEEIGWLNGFNETTGERGDFPGTYVEYIGRKKISPPTPKPRPPRPLPVAPSPAKTESESEQQAFSLPDLTEQFTPPDVAPPILVKIVETIEKKGLEYSTLYGAQGSSSAVELRQIFECDASSSDLETFDVHTLSDALKRYILDLPNPIIPAAVYSDMISVAQEVQSSEEYAQLLKKLIRSPNIPPQYWLTLQYLLKHFLRVCQASSKNLLNARSLAEIFSPLLFKFQIASSDNTEHHIKILEVLITSEWNERQPVPALPPKPPKPNSVTNNSMNNNMSLQDAEWYWGDISREEVNEKLRDTADGTFLVRDASTKMHGDYTLTLRKGGNNKLIKIFHRDGKYGFSDPLTFNSVVELINHYRNESLAQYNPKLDVKLLYPVSKYQQDQVVKEDSIEAVGKKLHEYNTQFQEKSREYDRLYEDYTRTSQEIQMKRTAIEAFNETIKIFEEQCQTQERYSKEYIEKFKREGNDKEIQRIMHNYEKLKSRISEIVDSRRRLEEDLKKQAAEYREIDKRMNSIKPDLIQLRKTRDQYLMWLTQKGVRQKKLNEWLGNENAEDQYSMVEDDEDLPHHDERTWNVGNINRSQAENLLRGKRDGTFLVRESSKQGCYACSVVVDGEVKHCVINKTPTGYGFAEPYNLYNSLKELVLHYQHTSLVQHNDSLNVTLAYPVYAQQRR"
+```
+
+```r
+as.character(df$Keywords[1])
+```
+
+```
+## [1] "Coiled coil;Complete proteome;Reference proteome;SH2 domain;SH3 domain"
 ```
 
 ## Combining query fields
@@ -107,16 +107,16 @@ It is also possible to look for entries that match different items within a sing
 
 ```r
 query <- list( "gene_exact" = c("Pik3r1", "Pik3r2"), "reviewed" = "yes", "organism" = c("9606", "10090"))
-df <- query_uniprot(query, columns = c("id", "genes", "organism"))
+df <- query_uniprot(query)
 print(df)
 ```
 
 ```
-##    Entry  Gene.names             Organism
-## 1 P26450      Pik3r1 Mus musculus (Mouse)
-## 2 O00459      PIK3R2 Homo sapiens (Human)
-## 3 P27986 PIK3R1 GRB1 Homo sapiens (Human)
-## 4 O08908      Pik3r2 Mus musculus (Mouse)
+##    Entry  Gene.names             Organism   Status
+## 1 P26450      Pik3r1 Mus musculus (Mouse) reviewed
+## 2 O00459      PIK3R2 Homo sapiens (Human) reviewed
+## 3 P27986 PIK3R1 GRB1 Homo sapiens (Human) reviewed
+## 4 O08908      Pik3r2 Mus musculus (Mouse) reviewed
 ```
 
 ## List of available query fields
@@ -150,7 +150,7 @@ See [here](https://www.uniprot.org/help/query-fields) for a more detailed descri
 
 
 
-Here is the list of all data columns retrieveable using parameter `column`. 
+Here is the list of all data columns retrieveable using parameter `columns`. 
 
 
 ```
@@ -330,4 +330,4 @@ Here is the list of all data columns retrieveable using parameter `column`.
 ## [174] "database(EMBL)"
 ```
 
-Note that the parameter `column` and the name of the corresponding column in the output dataframe do not necessarily match. See [here](https://www.uniprot.org/help/uniprotkb_column_names) for a more detailed description.
+Note that the parameter `columns` and the name of the corresponding column in the output dataframe do not necessarily match. See [here](https://www.uniprot.org/help/uniprotkb_column_names) for a more detailed description.
