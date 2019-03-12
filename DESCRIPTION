@@ -6,7 +6,9 @@ Author: Guillaume Voisinne
 Maintainer: Guillaume Voisinne <voisinne@ciml.univ-mrs.fr>
 Description: This package aims to facilitate retrieving information from the uniprot database using R.
 Imports:
-	utils
+	utils,
+	RCurl,
+	XML
 License: file LICENSE
 Encoding: UTF-8
 LazyData: true

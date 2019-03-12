@@ -106,3 +106,26 @@ query_uniprot <- function(query = NULL, columns = c("id", "genes", "organism", "
   return( get_uniprot_data(query, columns = columns) )
 
 }
+
+#' list all available query fields
+#' @import XML
+#' @import RCurl
+#' @export
+list_query_fields <- function(){
+  theurl <- getURL('https://www.uniprot.org/help/query-fields',.opts = list(ssl.verifypeer = FALSE) )
+  tables <- readHTMLTable(theurl, stringsAsFactors = FALSE)
+  #tables <- list.clean(tables, fun = is.null, recursive = FALSE)
+  return(tables[[1]]$Field)
+}
+
+#' list all available data columns
+#' @import XML
+#' @import RCurl
+#' @export
+list_data_columns <- function(){
+  theurl <- getURL('https://www.uniprot.org/help/uniprotkb_column_names',.opts = list(ssl.verifypeer = FALSE) )
+  tables <- readHTMLTable(theurl, stringsAsFactors = FALSE)
+  #tables <- list.clean(tables, fun = is.null, recursive = FALSE)
+  data <- do.call(rbind, tables)
+  return(data[["Column names as displayed in URL"]])
+}
