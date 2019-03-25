@@ -187,33 +187,24 @@ $(document).ready(function () {
 </div>
 
 
-<div id="queryup" class="section level1">
-<h1>queryup</h1>
+<div id="r-package-queryup" class="section level1">
+<h1>R package: queryup</h1>
+<p>Guillaume Voisinne 2019 - 03 - 12</p>
+<p><a href="https://travis-ci.org/VoisinneG/queryup"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5OCIgaGVpZ2h0PSIyMCI+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4Mj0iMCIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2JiYiIgc3RvcC1vcGFjaXR5PSIuMSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1vcGFjaXR5PSIuMSIvPjwvbGluZWFyR3JhZGllbnQ+PHJlY3Qgcng9IjMiIHdpZHRoPSI5OCIgaGVpZ2h0PSIyMCIgZmlsbD0iIzU1NSIvPjxyZWN0IHJ4PSIzIiB4PSIzNyIgd2lkdGg9IjYxIiBoZWlnaHQ9IjIwIiBmaWxsPSIjOWY5ZjlmIi8+PHBhdGggZmlsbD0iIzlmOWY5ZiIgZD0iTTM3IDBoNHYyMGgtNHoiLz48cmVjdCByeD0iMyIgd2lkdGg9Ijk4IiBoZWlnaHQ9IjIwIiBmaWxsPSJ1cmwoI2EpIi8+PGcgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLFZlcmRhbmEsR2VuZXZhLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjx0ZXh0IHg9IjE5LjUiIHk9IjE1IiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIj5idWlsZDwvdGV4dD48dGV4dCB4PSIxOS41IiB5PSIxNCI+YnVpbGQ8L3RleHQ+PHRleHQgeD0iNjYuNSIgeT0iMTUiIGZpbGw9IiMwMTAxMDEiIGZpbGwtb3BhY2l0eT0iLjMiPnVua25vd248L3RleHQ+PHRleHQgeD0iNjYuNSIgeT0iMTQiPnVua25vd248L3RleHQ+PC9nPjwvc3ZnPg==" alt="Travis-CI Build Status" /></a></p>
 <p>The <code>queryup</code> R package aims to facilitate retrieving information from the UniProt database using R. Programmatic access to the UniProt database is peformed by submitting queries to the <a href="https://www.uniprot.org/help/api_queries">UniProt website REST API</a>.</p>
-<div id="table-of-contents" class="section level2">
-<h2>Table of contents</h2>
-<p><a href="#install">Install</a></p>
-<p><a href="#queries">Queries</a></p>
-<p><a href="#columns">Columns</a></p>
-<p><a href="#combining-query-fields">Combining query fields</a></p>
-<p><a href="#multiple-items-per-query-field">Multiple items per query field</a></p>
-<p><a href="#list-of-available-query-fields">List of available query fields</a></p>
-<p><a href="#list-of-available-data-columns">List of available data columns</a></p>
-</div>
 <div id="install" class="section level2">
 <h2>Install</h2>
 <p>Install the package from github using devtools:</p>
-<pre><code>devtools::install_github(&quot;VoisinneG/queryup&quot;)
+<pre class="r"><code>devtools::install_github(&quot;VoisinneG/queryup&quot;)
 library(queryup)</code></pre>
 </div>
 <div id="queries" class="section level2">
 <h2>Queries</h2>
 <p>Queries combine different fields to identify matching database entries. Here, queries are submitted using the function <code>query_uniprot()</code>. In the <code>queryup</code> R package, a query must be formattted as a list containing character vectors named after existing UniProt fields. The list of all available fields along with example queries is shown <a href="#list-of-available-query%20fields">here</a>. Different query fields must be matched simultaneously. This query will return the UniProt ids of all proteins encoded by gene <em>Pik3r1</em>.</p>
-<pre><code>query &lt;- list( &quot;gene_exact&quot; = &quot;Pik3r1&quot; )
+<pre class="r"><code>query &lt;- list( &quot;gene_exact&quot; = &quot;Pik3r1&quot; )
 df &lt;- query_uniprot(query, columns = c(&quot;id&quot;, &quot;genes&quot;))
-summary(df)
-
-##         Entry                     Gene.names 
+summary(df)</code></pre>
+<pre><code>##         Entry                     Gene.names 
 ##  A0A087WQM2:  1   PIK3R1               :214  
 ##  A0A087X689:  1   Pik3r1               : 15  
 ##  A0A096MNU6:  1   pik3r1               : 12  
@@ -224,39 +215,32 @@ summary(df)
 </div>
 <div id="columns" class="section level2">
 <h2>Columns</h2>
-<p>By default, <code>query_uniprot()</code> returns a dataframe with protein ids, gene names, organism and Swiss-Prot review status. You can choose which data columns to retrieve using the <code>columns</code> parameter. See this <a href="#list-of-available-data-columns">section</a> for all availbale UniProt data columns.</p>
-<pre><code>df &lt;- query_uniprot(query, columns = c(&quot;id&quot;, &quot;sequence&quot;, &quot;keywords&quot;))</code></pre>
-<p>Note that the parameter <code>column</code> and the name of the corresponding column in the output dataframe do not necessarily match.</p>
-<pre><code>names(df)
-
-## [1] &quot;Entry&quot;    &quot;Sequence&quot; &quot;Keywords&quot;
-
-as.character(df$Sequence[1])
-
-## [1] &quot;MSAEGYQYRALYDYKKEREEDIDLHLGDILTVNKGSLLALGFSEGEEAKPEEIGWLNGFNETTGERGDFPGTYVEYIGRKKISPPTPKPRPPRPLPVAPSPAKTESESEQQAFSLPDLTEQFTPPDVAPPILVKIVETIEKKGLEYSTLYGAQGSSSAVELRQIFECDASSSDLETFDVHTLSDALKRYILDLPNPIIPAAVYSDMISVAQEVQSSEEYAQLLKKLIRSPNIPPQYWLTLQYLLKHFLRVCQASSKNLLNARSLAEIFSPLLFKFQIASSDNTEHHIKILEVLITSEWNERQPVPALPPKPPKPNSVTNNSMNNNMSLQDAEWYWGDISREEVNEKLRDTADGTFLVRDASTKMHGDYTLTLRKGGNNKLIKIFHRDGKYGFSDPLTFNSVVELINHYRNESLAQYNPKLDVKLLYPVSKYQQDQVVKEDSIEAVGKKLHEYNTQFQEKSREYDRLYEDYTRTSQEIQMKRTAIEAFNETIKIFEEQCQTQERYSKEYIEKFKREGNDKEIQRIMHNYEKLKSRISEIVDSRRRLEEDLKKQAAEYREIDKRMNSIKPDLIQLRKTRDQYLMWLTQKGVRQKKLNEWLGNENAEDQYSMVEDDEDLPHHDERTWNVGNINRSQAENLLRGKRDGTFLVRESSKQGCYACSVVVDGEVKHCVINKTPTGYGFAEPYNLYNSLKELVLHYQHTSLVQHNDSLNVTLAYPVYAQQRR&quot;
-
-as.character(df$Keywords[1])
-
-## [1] &quot;Coiled coil;Complete proteome;Reference proteome;SH2 domain;SH3 domain&quot;</code></pre>
+<p>By default, <code>query_uniprot()</code> returns a dataframe with protein ids, gene names, organism and Swiss-Prot review status. You can choose which data columns to retrieve using the <code>columns</code> parameter.</p>
+<pre class="r"><code>df &lt;- query_uniprot(query, columns = c(&quot;id&quot;, &quot;sequence&quot;, &quot;keywords&quot;))</code></pre>
+<p>See this <a href="#list-of-available-data-columns">section</a> for all availbale UniProt data columns. Note that the parameter <code>column</code> and the name of the corresponding column in the output dataframe do not necessarily match.</p>
+<pre class="r"><code>names(df)</code></pre>
+<pre><code>## [1] &quot;Entry&quot;    &quot;Sequence&quot; &quot;Keywords&quot;</code></pre>
+<pre class="r"><code>as.character(df$Sequence[1])</code></pre>
+<pre><code>## [1] &quot;MSAEGYQYRALYDYKKEREEDIDLHLGDILTVNKGSLLALGFSEGEEAKPEEIGWLNGFNETTGERGDFPGTYVEYIGRKKISPPTPKPRPPRPLPVAPSPAKTESESEQQAFSLPDLTEQFTPPDVAPPILVKIVETIEKKGLEYSTLYGAQGSSSAVELRQIFECDASSSDLETFDVHTLSDALKRYILDLPNPIIPAAVYSDMISVAQEVQSSEEYAQLLKKLIRSPNIPPQYWLTLQYLLKHFLRVCQASSKNLLNARSLAEIFSPLLFKFQIASSDNTEHHIKILEVLITSEWNERQPVPALPPKPPKPNSVTNNSMNNNMSLQDAEWYWGDISREEVNEKLRDTADGTFLVRDASTKMHGDYTLTLRKGGNNKLIKIFHRDGKYGFSDPLTFNSVVELINHYRNESLAQYNPKLDVKLLYPVSKYQQDQVVKEDSIEAVGKKLHEYNTQFQEKSREYDRLYEDYTRTSQEIQMKRTAIEAFNETIKIFEEQCQTQERYSKEYIEKFKREGNDKEIQRIMHNYEKLKSRISEIVDSRRRLEEDLKKQAAEYREIDKRMNSIKPDLIQLRKTRDQYLMWLTQKGVRQKKLNEWLGNENAEDQYSMVEDDEDLPHHDERTWNVGNINRSQAENLLRGKRDGTFLVRESSKQGCYACSVVVDGEVKHCVINKTPTGYGFAEPYNLYNSLKELVLHYQHTSLVQHNDSLNVTLAYPVYAQQRR&quot;</code></pre>
+<pre class="r"><code>as.character(df$Keywords[1])</code></pre>
+<pre><code>## [1] &quot;Coiled coil;Complete proteome;Reference proteome;SH2 domain;SH3 domain&quot;</code></pre>
 </div>
 <div id="combining-query-fields" class="section level2">
 <h2>Combining query fields</h2>
 <p>Our first query returned many matches. We can build more specific queries by using more than one query field. By default, matching entries must satisfy all query fields simultaneously. Let’s retrieve the only Swiss-Prot reviewed protein entry encoded by gene <em>Pik3r1</em> in <em>Homo sapiens</em> (taxon: 9606):</p>
-<pre><code>query &lt;- list( &quot;gene_exact&quot; = &quot;Pik3r1&quot;, &quot;reviewed&quot; = &quot;yes&quot;, &quot;organism&quot; = &quot;9606&quot; )
+<pre class="r"><code>query &lt;- list( &quot;gene_exact&quot; = &quot;Pik3r1&quot;, &quot;reviewed&quot; = &quot;yes&quot;, &quot;organism&quot; = &quot;9606&quot; )
 df &lt;- query_uniprot(query)
-print(df)
-
-##    Entry  Gene.names             Organism   Status
+print(df)</code></pre>
+<pre><code>##    Entry  Gene.names             Organism   Status
 ## 1 P27986 PIK3R1 GRB1 Homo sapiens (Human) reviewed</code></pre>
 </div>
 <div id="multiple-items-per-query-field" class="section level2">
 <h2>Multiple items per query field</h2>
 <p>It is also possible to look for entries that match different items within a single query field. Items from a given query field are looked for independently. Hence, the following query will return all Swiss-Prot reviewed proteins encoded by either <em>Pik3r1</em> or <em>Pik3r2</em> in either <em>Mus musculus</em> (taxon: 10090) or <em>Homo sapiens</em> (taxon: 9606):</p>
-<pre><code>query &lt;- list( &quot;gene_exact&quot; = c(&quot;Pik3r1&quot;, &quot;Pik3r2&quot;), &quot;reviewed&quot; = &quot;yes&quot;, &quot;organism&quot; = c(&quot;9606&quot;, &quot;10090&quot;))
+<pre class="r"><code>query &lt;- list( &quot;gene_exact&quot; = c(&quot;Pik3r1&quot;, &quot;Pik3r2&quot;), &quot;reviewed&quot; = &quot;yes&quot;, &quot;organism&quot; = c(&quot;9606&quot;, &quot;10090&quot;))
 df &lt;- query_uniprot(query)
-print(df)
-
-##    Entry  Gene.names             Organism   Status
+print(df)</code></pre>
+<pre><code>##    Entry  Gene.names             Organism   Status
 ## 1 P26450      Pik3r1 Mus musculus (Mouse) reviewed
 ## 2 O00459      PIK3R2 Homo sapiens (Human) reviewed
 ## 3 P27986 PIK3R1 GRB1 Homo sapiens (Human) reviewed
@@ -264,7 +248,8 @@ print(df)
 </div>
 <div id="list-of-available-query-fields" class="section level2">
 <h2>List of available query fields</h2>
-<p>Here is the list of all query fields available:</p>
+<p>You can view all query fields available using:</p>
+<pre class="r"><code>list_query_fields()</code></pre>
 <pre><code>##  [1] &quot;accession&quot;         &quot;active&quot;            &quot;annotation&quot;       
 ##  [4] &quot;author&quot;            &quot;cdantigen&quot;         &quot;citation&quot;         
 ##  [7] &quot;cluster&quot;           &quot;count&quot;             &quot;created&quot;          
@@ -284,7 +269,8 @@ print(df)
 </div>
 <div id="list-of-available-data-columns" class="section level2">
 <h2>List of available data columns</h2>
-<p>Here is the list of all data columns retrieveable using parameter <code>columns</code>.</p>
+<p>You can view all data columns retrieveable using :</p>
+<pre class="r"><code>list_data_columns()</code></pre>
 <pre><code>##   [1] &quot;id&quot;                                      
 ##   [2] &quot;entry name&quot;                              
 ##   [3] &quot;genes&quot;                                   

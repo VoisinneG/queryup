@@ -7,5 +7,6 @@
 list_query_fields()
 }
 \description{
-list all available query fields
+Prints all available query fields as
+listed on the \href{https://www.uniprot.org/help/query-fields}{UniProt website}.
 }

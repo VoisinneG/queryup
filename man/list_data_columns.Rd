@@ -7,5 +7,6 @@
 list_data_columns()
 }
 \description{
-list all available data columns
+Prints all available data columns as
+listed on the \href{https://www.uniprot.org/help/uniprotkb_column_names}{UniProt website}.
 }

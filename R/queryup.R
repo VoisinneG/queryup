@@ -47,7 +47,9 @@ get_uniprot_data <- function(query = NULL, columns = c("id", "genes", "organism"
       read.table(full_url,
                  sep ="\t",
                  header = TRUE,
-                 quote = "")
+                 quote = "",
+                 stringsAsFactors = FALSE
+                )
     }, error=function(err) {
       message(
         "reading url",
@@ -64,6 +66,8 @@ get_uniprot_data <- function(query = NULL, columns = c("id", "genes", "organism"
 }
 
 
+#' Retrieve data from uniprot using uniprot's REST API.
+#'
 #' Retrieve data from uniprot using uniprot's REST API.
 #' To avoid non-responsive queries, they are splitted into
 #' smaller queries withat most \code{max_keys} items per query field.
@@ -107,7 +111,27 @@ query_uniprot <- function(query = NULL, columns = c("id", "genes", "organism", "
 
 }
 
+#' Create a data.frame with UniProt annotations corrresponding to a set of UniProt IDs
+#'
+#' @param id Character vector with UniProt IDs
+#' @param columns names of uniprot data columns to retrieve. Examples include "id",
+#' "genes", "keywords", "sequence", "go" (use \code{list_data_columns()} to see the full list)
+#' @return a data.frame
+#' @export
+get_annotations_uniprot <- function( id, columns = c("genes", "keywords", "families", "go") ){
+  query <- list("id" = id)
+  columns <- union("id", columns)
+  df_annot <- query_uniprot(query = query, columns = columns, max_keys = 400)
+
+  idx_match <- match(id, df_annot$Entry)
+  df <- data.frame(id = id, df_annot[idx_match, ])
+  return(df)
+}
+
 #' list all available query fields
+#'
+#' Prints all available query fields as
+#' listed on the \href{https://www.uniprot.org/help/query-fields}{UniProt website}.
 #' @import XML
 #' @import RCurl
 #' @export
@@ -119,6 +143,9 @@ list_query_fields <- function(){
 }
 
 #' list all available data columns
+#'
+#' Prints all available data columns as
+#' listed on the \href{https://www.uniprot.org/help/uniprotkb_column_names}{UniProt website}.
 #' @import XML
 #' @import RCurl
 #' @export
@@ -127,5 +154,6 @@ list_data_columns <- function(){
   tables <- readHTMLTable(theurl, stringsAsFactors = FALSE)
   #tables <- list.clean(tables, fun = is.null, recursive = FALSE)
   data <- do.call(rbind, tables)
-  return(data[["Column names as displayed in URL"]])
+  col_names <- gsub(" ", "_", data[["Column names as displayed in URL"]], fixed = TRUE)
+  return(col_names)
 }

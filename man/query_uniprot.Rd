@@ -2,9 +2,7 @@
 % Please edit documentation in R/queryup.R
 \name{query_uniprot}
 \alias{query_uniprot}
-\title{Retrieve data from uniprot using uniprot's REST API.
-To avoid non-responsive queries, they are splitted into
-smaller queries withat most \code{max_keys} items per query field.}
+\title{Retrieve data from uniprot using uniprot's REST API.}
 \usage{
 query_uniprot(query = NULL, columns = c("id", "genes", "organism",
   "reviewed"), max_keys = 400)
