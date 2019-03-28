@@ -33,6 +33,7 @@ query fields are collapsed with '+and+' (see \code{query_uniprot()})
 query = list("organism" = c("10090"), "reviewed" = "yes")
 df_mouse_reviewed <-  query_uniprot(query = query)
 
-#long query:
-query = list("id" = df_mouse_reviewed$Entry)
+#Splitting long queries:
+query = list("id" = df_mouse_reviewed$Entry[1:300])
+df <-  query_uniprot(query = query, max_keys = 50)
 }

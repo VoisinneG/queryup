@@ -111,14 +111,13 @@ query_uniprot <- function(query = NULL, columns = c("id", "genes", "organism", "
 
         query_short <- query
         query_short[[idx_long]] <- query[[idx_long]][ i_start : i_end]
-
-
         df_list[[i]] <- get_uniprot_data(query = query_short, columns = columns)
 
         if (is.function(updateProgress)) {
-          cat( as.numeric( format(i/q*100, digits = 0) ) )
-          updateProgress(value = as.numeric( format(i/q*100, digits = 0) ))
+          text = paste(i_end, " / ", length(query[[idx_long]]), sep = "")
+          updateProgress(value = as.numeric( format(i/q*100, digits = 0) ), detail = text)
         }
+
         setTxtProgressBar(pb, i)
       }
       close(pb)
