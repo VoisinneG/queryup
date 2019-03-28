@@ -51,10 +51,7 @@ get_uniprot_data <- function(query = NULL, columns = c("id", "genes", "organism"
                  stringsAsFactors = FALSE
                 )
     }, error=function(err) {
-      stop(
-        "reading url 'https://www.uniprot.org/...' failed"
-      )
-
+      stop("reading url 'https://www.uniprot.org/...' failed")
     })
   }
 
@@ -108,15 +105,15 @@ query_uniprot <- function(query = NULL, columns = c("id", "genes", "organism", "
 
         i_start <- (i-1)*max_keys + 1
         i_end <- i*max_keys
-
         query_short <- query
         query_short[[idx_long]] <- query[[idx_long]][ i_start : i_end]
-        df_list[[i]] <- get_uniprot_data(query = query_short, columns = columns)
 
         if (is.function(updateProgress)) {
           text = paste(i_end, " / ", length(query[[idx_long]]), sep = "")
           updateProgress(value = as.numeric( format(i/q*100, digits = 0) ), detail = text)
         }
+
+        df_list[[i]] <- get_uniprot_data(query = query_short, columns = columns)
 
         setTxtProgressBar(pb, i)
       }
@@ -133,9 +130,6 @@ query_uniprot <- function(query = NULL, columns = c("id", "genes", "organism", "
 
         query_split[[1]][[i]] <- query[[i]][1:max_keys]
         query_split[[2]][[i]] <- query[[i]][(max_keys+1):length(query[[i]])]
-
-        #query_split[[1]] <- split_query(query_split[[1]], max_keys = max_keys)
-        #query_split[[2]] <- split_query(query_split[[2]], max_keys = max_keys)
 
         df_list <- lapply(query_split, query_uniprot, columns = columns, max_keys = max_keys)
 
@@ -154,14 +148,27 @@ query_uniprot <- function(query = NULL, columns = c("id", "genes", "organism", "
 #' @param id Character vector with UniProt IDs
 #' @param columns names of uniprot data columns to retrieve. Examples include "id",
 #' "genes", "keywords", "sequence", "go" (use \code{list_data_columns()} to see the full list)
+#' @param max_keys maximum number of field items submitted
 #' @param updateProgress used to display progress in shiny apps
 #' @return a data.frame
+#' @examples
+#' # Query all reviewed UniProt entries for Mus musculus:
+#' query = list("organism" = c("10090"), "reviewed" = "yes")
+#' df_mouse_reviewed <-  query_uniprot(query = query)
+#' df <-  get_annotations_uniprot(id = df_mouse_reviewed$Entry[1:300], max_keys = 50)
 #' @export
-get_annotations_uniprot <- function( id, columns = c("genes", "keywords", "families", "go") , updateProgress = NULL){
+get_annotations_uniprot <- function( id, columns = c("genes", "keywords", "families", "go") , max_keys = 400, updateProgress = NULL){
   query <- list("id" = id)
   columns <- union("id", columns)
 
-  df_annot <- query_uniprot(query = query, columns = columns, max_keys = 400, updateProgress = updateProgress)
+  df_annot <- tryCatch({
+    query_uniprot(query = query, columns = columns, max_keys = max_keys, updateProgress = updateProgress)
+  }, error = function(err){
+    warning("Query failed. Please retry later.")
+    NULL
+  })
+
+  if(is.null(df_annot)) return(NULL)
 
   idx_match <- match(id, df_annot$Entry)
   df <- data.frame(id = id, df_annot[idx_match, ])
