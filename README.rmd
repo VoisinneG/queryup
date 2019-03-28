@@ -33,7 +33,7 @@ Queries combine different fields to identify matching database entries. Here, qu
 ```{r message=FALSE, warnings=FALSE}
 query <- list( "gene_exact" = "Pik3r1" )
 df <- query_uniprot(query, columns = c("id", "genes"))
-summary(df)
+head(df)
 ```
 
 ## Columns

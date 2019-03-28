@@ -5,16 +5,18 @@
 \title{Retrieve data from uniprot using uniprot's REST API.}
 \usage{
 query_uniprot(query = NULL, columns = c("id", "genes", "organism",
-  "reviewed"), max_keys = 400)
+  "reviewed"), max_keys = 400, updateProgress = NULL)
 }
 \arguments{
 \item{query}{list of keys corresponding to uniprot's query fields. For example :
-list("gene_exact" = c("Pik3r1", "Pik3r2") , "organism" = c("10090", "9606"), "reviewed" = "yes")}
+query = list("gene_exact" = c("Pik3r1", "Pik3r2"), "organism" = c("10090", "9606"), "reviewed" = "yes")}
 
 \item{columns}{names of uniprot data columns to retrieve. Examples include "id",
 "genes", "keywords", "sequence"}
 
 \item{max_keys}{maximum number of field items submitted}
+
+\item{updateProgress}{used to display progress in shiny apps}
 }
 \value{
 a data.frame
@@ -22,5 +24,15 @@ a data.frame
 \description{
 Retrieve data from uniprot using uniprot's REST API.
 To avoid non-responsive queries, they are splitted into
-smaller queries withat most \code{max_keys} items per query field.
+smaller queries with at most \code{max_keys} items per query field.
+Not that it works only with queries where items within query fields are collapse with '+or+' and different
+query fields are collapsed with '+and+' (see \code{query_uniprot()})
+}
+\examples{
+# Query all reviewed UniProt entries for Mus musculus:
+query = list("organism" = c("10090"), "reviewed" = "yes")
+df_mouse_reviewed <-  query_uniprot(query = query)
+
+#long query:
+query = list("id" = df_mouse_reviewed$Entry)
 }
