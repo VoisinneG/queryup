@@ -86,7 +86,7 @@ get_uniprot_data <- function(query = NULL, columns = c("id", "genes", "organism"
 #'
 #' #Splitting long queries:
 #' query = list("id" = df_mouse_reviewed$Entry[1:300])
-#' df_mouse_reviewed <-  query_uniprot(query = query, max_keys = 50)
+#' df <-  query_uniprot(query = query, max_keys = 50)
 #' @export
 query_uniprot <- function(query = NULL, columns = c("id", "genes", "organism", "reviewed" ), max_keys = 400, updateProgress = NULL){
 
@@ -114,9 +114,9 @@ query_uniprot <- function(query = NULL, columns = c("id", "genes", "organism", "
 
 
         df_list[[i]] <- get_uniprot_data(query = query_short, columns = columns)
+
         if (is.function(updateProgress)) {
-          text <- paste0( i/q*100)
-          updateProgress(value = format(i/q*100, digits = 0), detail = text)
+          updateProgress(value = floor(i/q*100), detail =format(i/q*100, digits = 0))
         }
         setTxtProgressBar(pb, i)
       }
