@@ -116,7 +116,8 @@ query_uniprot <- function(query = NULL, columns = c("id", "genes", "organism", "
         df_list[[i]] <- get_uniprot_data(query = query_short, columns = columns)
 
         if (is.function(updateProgress)) {
-          updateProgress(value = floor(i/q*100))
+          cat( as.numeric( format(i/q*100, digits = 0) ) )
+          updateProgress(value = as.numeric( format(i/q*100, digits = 0) ))
         }
         setTxtProgressBar(pb, i)
       }
