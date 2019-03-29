@@ -1,7 +1,7 @@
 R package: queryup
 ================
 Guillaume Voisinne
-2019 - 03 - 25
+2019 - 03 - 29
 
 [![Travis-CI Build Status](https://travis-ci.org/VoisinneG/queryup.svg?branch=master)](https://travis-ci.org/VoisinneG/queryup)
 
@@ -20,21 +20,21 @@ library(queryup)
 Queries
 -------
 
-Queries combine different fields to identify matching database entries. Here, queries are submitted using the function `query_uniprot()`. In the `queryup` R package, a query must be formattted as a list containing character vectors named after existing UniProt fields. The list of all available fields along with example queries is shown [here](#list-of-available-query%20fields). Different query fields must be matched simultaneously. This query will return the UniProt ids of all proteins encoded by gene *Pik3r1*.
+Queries combine different fields to identify matching database entries. Here, queries are submitted using the function `query_uniprot()`. In the `queryup` R package, a query must be formattted as a list containing character vectors named after existing UniProt fields. The list of all available fields along with example queries is shown [here](#list-of-available-query%20fields). Different query fields must be matched simultaneously. For instance, the following query will return the UniProt ids of all proteins encoded by gene *Pik3r1* in *Homo sapiens* (taxon: 9606).
 
 ``` r
-query <- list( "gene_exact" = "Pik3r1" )
-df <- query_uniprot(query, columns = c("id", "genes"))
+query <- list( "gene_exact" = "Pik3r1", "organism" = "9606" )
+df <- query_uniprot(query, columns = c("id", "genes"), show_progress = FALSE)
 head(df)
 ```
 
-    ##        Entry Gene.names
-    ## 1     U3K5G8     PIK3R1
-    ## 2 A0A1A8CRB1     PIK3R1
-    ## 3 A0A1A8BEU9     PIK3R1
-    ## 4 A0A1A8DCV2     PIK3R1
-    ## 5 A0A1A8BV58     PIK3R1
-    ## 6 A0A1A8E4K3     PIK3R1
+    ##        Entry          Gene.names
+    ## 1     H0YB27              PIK3R1
+    ## 2     E5RK66              PIK3R1
+    ## 3 A0A2X0SFG1              PIK3R1
+    ## 4 A0A1D8GZE0 NR4A3 PIK3R1 fusion
+    ## 5     J7GXU7              PIK3R1
+    ## 6     E5RJY0              PIK3R1
 
 Columns
 -------
@@ -42,7 +42,9 @@ Columns
 By default, `query_uniprot()` returns a dataframe with protein ids, gene names, organism and Swiss-Prot review status. You can choose which data columns to retrieve using the `columns` parameter.
 
 ``` r
-df <- query_uniprot(query, columns = c("id", "sequence", "keywords"))
+df <- query_uniprot(query, 
+                    columns = c("id", "sequence", "keywords"),
+                    show_progress = FALSE)
 ```
 
 See this [section](#list-of-available-data-columns) for all availbale UniProt data columns. Note that the parameter `column` and the name of the corresponding column in the output dataframe do not necessarily match.
@@ -57,13 +59,13 @@ names(df)
 as.character(df$Sequence[1])
 ```
 
-    ## [1] "MSAEGYQYRALYDYKKEREEDIDLHLGDILTVNKGSLLALGFSEGEEAKPEEIGWLNGFNETTGERGDFPGTYVEYIGRKKISPPTPKPRPPRPLPVAPSPAKTESESEQQAFSLPDLTEQFTPPDVAPPILVKIVETIEKKGLEYSTLYGAQGSSSAVELRQIFECDASSSDLETFDVHTLSDALKRYILDLPNPIIPAAVYSDMISVAQEVQSSEEYAQLLKKLIRSPNIPPQYWLTLQYLLKHFLRVCQASSKNLLNARSLAEIFSPLLFKFQIASSDNTEHHIKILEVLITSEWNERQPVPALPPKPPKPNSVTNNSMNNNMSLQDAEWYWGDISREEVNEKLRDTADGTFLVRDASTKMHGDYTLTLRKGGNNKLIKIFHRDGKYGFSDPLTFNSVVELINHYRNESLAQYNPKLDVKLLYPVSKYQQDQVVKEDSIEAVGKKLHEYNTQFQEKSREYDRLYEDYTRTSQEIQMKRTAIEAFNETIKIFEEQCQTQERYSKEYIEKFKREGNDKEIQRIMHNYEKLKSRISEIVDSRRRLEEDLKKQAAEYREIDKRMNSIKPDLIQLRKTRDQYLMWLTQKGVRQKKLNEWLGNENAEDQYSMVEDDEDLPHHDERTWNVGNINRSQAENLLRGKRDGTFLVRESSKQGCYACSVVVDGEVKHCVINKTPTGYGFAEPYNLYNSLKELVLHYQHTSLVQHNDSLNVTLAYPVYAQQRR"
+    ## [1] "TAKEPHQNRRLERALTLPDLAEQFAPPDIAPPLLIKLVEAIEKKGLECSTLYRTQSSSNLAELRQLLDCDTPSVDLEMIDVHVLADAFKRYLLDLPNPVIPAAVYSEMISLAPEVQSSEEYIQLLKKLIRS"
 
 ``` r
 as.character(df$Keywords[1])
 ```
 
-    ## [1] "Coiled coil;Complete proteome;Reference proteome;SH2 domain;SH3 domain"
+    ## [1] "Complete proteome;Proteomics identification;Reference proteome"
 
 Combining query fields
 ----------------------
@@ -72,19 +74,12 @@ Our first query returned many matches. We can build more specific queries by usi
 
 ``` r
 query <- list( "gene_exact" = "Pik3r1", "reviewed" = "yes", "organism" = "9606" )
-df <- query_uniprot(query)
-```
-
-    ## Warning in file(file, "rt"): cannot open URL 'https://www.uniprot.org/
-    ## uniprot/?query=gene_exact:(Pik3r1)+and+reviewed:(yes)+and+organism:
-    ## (9606)&format=tab&columns=id,genes,organism,reviewed': HTTP status was '502
-    ## Bad Gateway'
-
-``` r
+df <- query_uniprot(query, show_progress = FALSE)
 print(df)
 ```
 
-    ## NULL
+    ##    Entry  Gene.names             Organism   Status
+    ## 1 P27986 PIK3R1 GRB1 Homo sapiens (Human) reviewed
 
 Multiple items per query field
 ------------------------------
@@ -93,7 +88,7 @@ It is also possible to look for entries that match different items within a sing
 
 ``` r
 query <- list( "gene_exact" = c("Pik3r1", "Pik3r2"), "reviewed" = "yes", "organism" = c("9606", "10090"))
-df <- query_uniprot(query)
+df <- query_uniprot(query, show_progress = FALSE)
 print(df)
 ```
 
