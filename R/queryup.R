@@ -157,8 +157,11 @@ query_uniprot <- function(query = NULL, columns = c("id", "genes", "organism", "
 #' df_mouse_reviewed <-  query_uniprot(query = query)
 #' df <-  get_annotations_uniprot(id = df_mouse_reviewed$Entry[1:300], max_keys = 50)
 #' @export
-get_annotations_uniprot <- function( id, columns = c("genes", "keywords", "families", "go") , max_keys = 400, updateProgress = NULL){
-  query <- list("id" = id)
+get_annotations_uniprot <- function(id, columns = c("genes", "keywords", "families", "go") , max_keys = 400, updateProgress = NULL){
+
+  idx <- which(!is.na(id))
+
+  query <- list("id" = id[idx])
   columns <- union("id", columns)
 
   df_annot <- tryCatch({
