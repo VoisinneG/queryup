@@ -5,7 +5,8 @@
 \title{Retrieve data from uniprot using uniprot's REST API.}
 \usage{
 query_uniprot(query = NULL, columns = c("id", "genes", "organism",
-  "reviewed"), max_keys = 400, updateProgress = NULL)
+  "reviewed"), max_keys = 400, updateProgress = NULL,
+  show_progress = TRUE)
 }
 \arguments{
 \item{query}{list of keys corresponding to uniprot's query fields. For example :
@@ -17,6 +18,8 @@ query = list("gene_exact" = c("Pik3r1", "Pik3r2"), "organism" = c("10090", "9606
 \item{max_keys}{maximum number of field items submitted}
 
 \item{updateProgress}{used to display progress in shiny apps}
+
+\item{show_progress}{Show progress bar}
 }
 \value{
 a data.frame

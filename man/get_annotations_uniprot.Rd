@@ -5,7 +5,7 @@
 \title{Create a data.frame with UniProt annotations corrresponding to a set of UniProt IDs}
 \usage{
 get_annotations_uniprot(id, columns = c("genes", "keywords", "families",
-  "go"), max_keys = 400, updateProgress = NULL)
+  "go"), max_keys = 400, updateProgress = NULL, show_progress = TRUE)
 }
 \arguments{
 \item{id}{Character vector with UniProt IDs}
@@ -16,10 +16,18 @@ get_annotations_uniprot(id, columns = c("genes", "keywords", "families",
 \item{max_keys}{maximum number of field items submitted}
 
 \item{updateProgress}{used to display progress in shiny apps}
+
+\item{show_progress}{Show progress bar}
 }
 \value{
 a data.frame
 }
 \description{
 Create a data.frame with UniProt annotations corrresponding to a set of UniProt IDs
+}
+\examples{
+# Query all reviewed UniProt entries for Mus musculus:
+query = list("organism" = c("10090"), "reviewed" = "yes")
+df_mouse_reviewed <-  query_uniprot(query = query)
+df <-  get_annotations_uniprot(id = df_mouse_reviewed$Entry[1:300], max_keys = 50)
 }

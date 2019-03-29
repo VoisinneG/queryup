@@ -75,6 +75,7 @@ get_uniprot_data <- function(query = NULL, columns = c("id", "genes", "organism"
 #' "genes", "keywords", "sequence"
 #' @param max_keys maximum number of field items submitted
 #' @param updateProgress used to display progress in shiny apps
+#' @param show_progress Show progress bar
 #' @return a data.frame
 #' @examples
 #' # Query all reviewed UniProt entries for Mus musculus:
@@ -85,7 +86,7 @@ get_uniprot_data <- function(query = NULL, columns = c("id", "genes", "organism"
 #' query = list("id" = df_mouse_reviewed$Entry[1:300])
 #' df <-  query_uniprot(query = query, max_keys = 50)
 #' @export
-query_uniprot <- function(query = NULL, columns = c("id", "genes", "organism", "reviewed" ), max_keys = 400, updateProgress = NULL){
+query_uniprot <- function(query = NULL, columns = c("id", "genes", "organism", "reviewed" ), max_keys = 400, updateProgress = NULL, show_progress = TRUE){
 
   message(paste("Querying the UniProt database...\n",sep=""))
 
@@ -99,7 +100,8 @@ query_uniprot <- function(query = NULL, columns = c("id", "genes", "organism", "
       q <- length(query[[idx_long]]) %/% max_keys
       if(r>0) q <- q+1
       df_list <- vector("list", length = q)
-      pb <- txtProgressBar(min = 0, max = q, style = 3)
+
+      if(show_progress) pb <- txtProgressBar(min = 0, max = q, style = 3)
 
       for(i in 1:q){
 
@@ -115,9 +117,10 @@ query_uniprot <- function(query = NULL, columns = c("id", "genes", "organism", "
 
         df_list[[i]] <- get_uniprot_data(query = query_short, columns = columns)
 
-        setTxtProgressBar(pb, i)
+        if(show_progress) setTxtProgressBar(pb, i)
       }
-      close(pb)
+
+      if(show_progress)close(pb)
 
       return(do.call(rbind, df_list))
 
@@ -150,6 +153,7 @@ query_uniprot <- function(query = NULL, columns = c("id", "genes", "organism", "
 #' "genes", "keywords", "sequence", "go" (use \code{list_data_columns()} to see the full list)
 #' @param max_keys maximum number of field items submitted
 #' @param updateProgress used to display progress in shiny apps
+#' @param show_progress Show progress bar
 #' @return a data.frame
 #' @examples
 #' # Query all reviewed UniProt entries for Mus musculus:
@@ -157,7 +161,11 @@ query_uniprot <- function(query = NULL, columns = c("id", "genes", "organism", "
 #' df_mouse_reviewed <-  query_uniprot(query = query)
 #' df <-  get_annotations_uniprot(id = df_mouse_reviewed$Entry[1:300], max_keys = 50)
 #' @export
-get_annotations_uniprot <- function(id, columns = c("genes", "keywords", "families", "go") , max_keys = 400, updateProgress = NULL){
+get_annotations_uniprot <- function(id,
+                                    columns = c("genes", "keywords", "families", "go") ,
+                                    max_keys = 400,
+                                    updateProgress = NULL,
+                                    show_progress = TRUE){
 
   idx <- which(!is.na(id))
 
@@ -165,7 +173,13 @@ get_annotations_uniprot <- function(id, columns = c("genes", "keywords", "famili
   columns <- union("id", columns)
 
   df_annot <- tryCatch({
-    query_uniprot(query = query, columns = columns, max_keys = max_keys, updateProgress = updateProgress)
+
+    query_uniprot(query = query,
+                  columns = columns,
+                  max_keys = max_keys,
+                  updateProgress = updateProgress,
+                  show_progress = show_progress)
+
   }, error = function(err){
     warning("Query failed. Please retry later.")
     NULL
