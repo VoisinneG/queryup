@@ -146,52 +146,6 @@ query_uniprot <- function(query = NULL, columns = c("id", "genes", "organism", "
 
 }
 
-#' Create a data.frame with UniProt annotations corrresponding to a set of UniProt IDs
-#'
-#' @param id Character vector with UniProt IDs
-#' @param columns names of uniprot data columns to retrieve. Examples include "id",
-#' "genes", "keywords", "sequence", "go" (use \code{list_data_columns()} to see the full list)
-#' @param max_keys maximum number of field items submitted
-#' @param updateProgress used to display progress in shiny apps
-#' @param show_progress Show progress bar
-#' @return a data.frame
-#' @examples
-#' # Query all reviewed UniProt entries for Mus musculus:
-#' query = list("organism" = c("10090"), "reviewed" = "yes")
-#' df_mouse_reviewed <-  query_uniprot(query = query)
-#' df <-  get_annotations(id = df_mouse_reviewed$Entry[1:300], max_keys = 50)
-#' @export
-get_annotations <- function(id,
-                            columns = c("genes", "keywords", "families", "go") ,
-                            max_keys = 400,
-                            updateProgress = NULL,
-                            show_progress = TRUE){
-
-  idx <- which(!is.na(id))
-
-  query <- list("id" = id[idx])
-  columns <- union("id", columns)
-
-  df_annot <- tryCatch({
-
-    query_uniprot(query = query,
-                  columns = columns,
-                  max_keys = max_keys,
-                  updateProgress = updateProgress,
-                  show_progress = show_progress)
-
-  }, error = function(err){
-    warning("Query failed. Please retry later.")
-    NULL
-  })
-
-  if(is.null(df_annot)) return(NULL)
-
-  idx_match <- match(id, df_annot$Entry)
-  df <- data.frame(id = id, df_annot[idx_match, ])
-  return(df)
-}
-
 #' list all available query fields
 #'
 #' Prints all available query fields as
