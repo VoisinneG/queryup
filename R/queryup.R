@@ -159,13 +159,13 @@ query_uniprot <- function(query = NULL, columns = c("id", "genes", "organism", "
 #' # Query all reviewed UniProt entries for Mus musculus:
 #' query = list("organism" = c("10090"), "reviewed" = "yes")
 #' df_mouse_reviewed <-  query_uniprot(query = query)
-#' df <-  get_annotations_uniprot(id = df_mouse_reviewed$Entry[1:300], max_keys = 50)
+#' df <-  get_annotations(id = df_mouse_reviewed$Entry[1:300], max_keys = 50)
 #' @export
-get_annotations_uniprot <- function(id,
-                                    columns = c("genes", "keywords", "families", "go") ,
-                                    max_keys = 400,
-                                    updateProgress = NULL,
-                                    show_progress = TRUE){
+get_annotations <- function(id,
+                            columns = c("genes", "keywords", "families", "go") ,
+                            max_keys = 400,
+                            updateProgress = NULL,
+                            show_progress = TRUE){
 
   idx <- which(!is.na(id))
 
