@@ -88,8 +88,6 @@ get_uniprot_data <- function(query = NULL, columns = c("id", "genes", "organism"
 #' @export
 query_uniprot <- function(query = NULL, columns = c("id", "genes", "organism", "reviewed" ), max_keys = 400, updateProgress = NULL, show_progress = TRUE){
 
-  message(paste("Querying the UniProt database...\n",sep=""))
-
   if(typeof(query) == "list"){
 
     idx_long <- which( sapply(query, length) > max_keys )
@@ -101,7 +99,10 @@ query_uniprot <- function(query = NULL, columns = c("id", "genes", "organism", "
       if(r>0) q <- q+1
       df_list <- vector("list", length = q)
 
-      if(show_progress) pb <- txtProgressBar(min = 0, max = q, style = 3)
+      if(show_progress) {
+        cat("Querying the UniProt database...\n")
+        pb <- txtProgressBar(min = 0, max = q, style = 3)
+      }
 
       for(i in 1:q){
 
