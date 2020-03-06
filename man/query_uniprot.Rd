@@ -4,9 +4,13 @@
 \alias{query_uniprot}
 \title{Retrieve data from uniprot using uniprot's REST API.}
 \usage{
-query_uniprot(query = NULL, columns = c("id", "genes", "organism",
-  "reviewed"), max_keys = 400, updateProgress = NULL,
-  show_progress = TRUE)
+query_uniprot(
+  query = NULL,
+  columns = c("id", "genes", "organism", "reviewed"),
+  max_keys = 400,
+  updateProgress = NULL,
+  show_progress = TRUE
+)
 }
 \arguments{
 \item{query}{list of keys corresponding to uniprot's query fields. For example :

@@ -36,7 +36,8 @@ get_uniprot_data <- function(query = NULL, columns = c("id", "genes", "organism"
       message("Query not supported")
       return(NULL)
     }
-    cols <- tolower(paste(columns, collapse = ","))
+    cols <- paste(columns, collapse = ",")
+
     full_url <- paste('https://www.uniprot.org/uniprot/?query=', full_query,
                       '&format=tab&columns=', cols,
                       sep = "")
@@ -47,6 +48,7 @@ get_uniprot_data <- function(query = NULL, columns = c("id", "genes", "organism"
       read.table(full_url,
                  sep ="\t",
                  header = TRUE,
+                 check.names = FALSE,
                  quote = "",
                  stringsAsFactors = FALSE
                 )

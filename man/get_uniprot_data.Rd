@@ -4,8 +4,10 @@
 \alias{get_uniprot_data}
 \title{Retrieve data from uniprot using uniprot's REST API}
 \usage{
-get_uniprot_data(query = NULL, columns = c("id", "genes", "organism",
-  "reviewed"))
+get_uniprot_data(
+  query = NULL,
+  columns = c("id", "genes", "organism", "reviewed")
+)
 }
 \arguments{
 \item{query}{list of keys corresponding to uniprot's query fields. For example :
