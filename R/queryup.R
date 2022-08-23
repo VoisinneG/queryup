@@ -1,23 +1,27 @@
 #' Retrieve data from uniprot using uniprot's REST API
 #'
-#' @param query list of keys corresponding to uniprot's query fields. For example :
-#' list("gene_exact" = c("Pik3r1", "Pik3r2") , "organism" = c("10090", "9606"), "reviewed" = "yes")
-#' @param columns names of uniprot data columns to retrieve. Examples include "id",
-#' "genes", "keywords", "sequence"
-#'
+#' @param query list of keys corresponding to uniprot's query fields.
+#' For example :
+#' list("gene_exact" = c("Pik3r1", "Pik3r2") ,
+#' "organism" = c("10090", "9606"), "reviewed" = "yes")
+#' @param base_url base URL for the UniProt REST API
+#' @param columns names of uniprot data columns to retrieve.
+#' Examples include "id", "genes", "keywords", "sequence"
 #' @return a data.frame
-#' @import utils
+#' @importFrom RCurl getURL
 #' @export
 #'
 #' @examples
 #' #Getting gene names, keywords and protein sequences associated with a set of uniprot IDs.
 #' ids <- c("P22682", "P47941")
 #' cols <- c("id", "genes", "keywords", "sequence")
-#' df <- get_uniprot_data(query = list("id" = ids), columns = cols)
+#' df <- get_uniprot_data(query = list("accession_id" = ids), columns = cols)
 #'
 #' #Lists all entries describing interactions with the protein described by entry P00520.
 #' df <- get_uniprot_data(query = list("interactor" = "P00520"), columns = cols)
-get_uniprot_data <- function(query = NULL, columns = c("id", "genes", "organism", "reviewed" )){
+get_uniprot_data <- function(query = NULL,
+                             base_url = "https://rest.uniprot.org/uniprotkb/",
+                             columns = c("id", "genes", "organism", "reviewed" )){
 
   df <- NULL
 
@@ -25,11 +29,10 @@ get_uniprot_data <- function(query = NULL, columns = c("id", "genes", "organism"
     if(typeof(query) == "list"){
       formatted_queries <- sapply(1:length(query),
                                   function(x){paste(names(query)[x], ":(",
-                                                    paste(query[[x]], collapse = "+or+"), ")",
+                                                    paste(query[[x]], collapse = "+OR+"), ")",
                                                     sep ="")})
 
-      url <- 'https://www.uniprot.org/uniprot/?query='
-      full_query <- paste(formatted_queries, collapse = "+and+")
+      full_query <- paste(formatted_queries, collapse = "+AND+")
     }else if(typeof(query) == "character"){
       full_query <- query
     }else{
@@ -38,25 +41,30 @@ get_uniprot_data <- function(query = NULL, columns = c("id", "genes", "organism"
     }
     cols <- paste(columns, collapse = ",")
 
-    full_url <- paste('https://www.uniprot.org/uniprot/?query=', full_query,
-                      '&format=tab&columns=', cols,
+    full_url <- paste(base_url, 'stream?query=', full_query,
+                      '&format=tsv&columns=', cols,
                       sep = "")
 
-    #message(paste("Querying the UniProt database...\n",sep=""))
 
-    df <- tryCatch({
-      read.table(full_url,
-                 sep ="\t",
-                 header = TRUE,
-                 check.names = FALSE,
-                 quote = "",
-                 stringsAsFactors = FALSE
-                )
-    }, error=function(err) {
-      stop("reading url 'https://www.uniprot.org/...' failed")
-    })
+    res <- try(
+      RCurl::getURL(full_url), silent = TRUE)
+    if( inherits(res, "try-error") ){
+      message(res)
+      stop(paste0("Accessing UniProt REST API at ", base_url,  " failed"))
+    }
+
   }
 
+  entries <- strsplit(res, split = "\n")[[1]]
+
+  df <- as.data.frame(do.call(rbind,
+                              lapply(entries,
+                                     function(x){
+                                       strsplit(x, split = "\t")[[1]]
+                                       })))
+  names <- df[1, ]
+  df <- df[-1, ]
+  names(df) <- names
 
   return(df)
 
@@ -68,27 +76,36 @@ get_uniprot_data <- function(query = NULL, columns = c("id", "genes", "organism"
 #' Retrieve data from uniprot using uniprot's REST API.
 #' To avoid non-responsive queries, they are splitted into
 #' smaller queries with at most \code{max_keys} items per query field.
-#' Not that it works only with queries where items within query fields are collapse with '+or+' and different
-#' query fields are collapsed with '+and+' (see \code{query_uniprot()})
+#' Not that it works only with queries where items within query fields are
+#' collapsed with '+OR+' and different
+#' query fields are collapsed with '+AND+' (see \code{query_uniprot()})
 #'
-#' @param query list of keys corresponding to uniprot's query fields. For example :
-#' query = list("gene_exact" = c("Pik3r1", "Pik3r2"), "organism" = c("10090", "9606"), "reviewed" = "yes")
-#' @param columns names of uniprot data columns to retrieve. Examples include "id",
-#' "genes", "keywords", "sequence"
+#' @param query list of keys corresponding to uniprot's query fields.
+#' For example :
+#' query = list("gene_exact" = c("Pik3r1", "Pik3r2"),
+#' "organism" = c("10090", "9606"), "reviewed" = "yes")
+#' @param columns names of uniprot data columns to retrieve.
+#' Examples include "id", "genes", "keywords", "sequence".
 #' @param max_keys maximum number of field items submitted
 #' @param updateProgress used to display progress in shiny apps
 #' @param show_progress Show progress bar
 #' @return a data.frame
+#' @importFrom utils setTxtProgressBar txtProgressBar
+#' @export
+#'
 #' @examples
 #' # Query all reviewed UniProt entries for Mus musculus:
-#' query = list("organism" = c("10090"), "reviewed" = "yes")
+#' query = list("organism_id" = c("10090"), "reviewed" = "yes")
 #' df_mouse_reviewed <-  query_uniprot(query = query)
 #'
 #' #Splitting long queries:
 #' query = list("id" = df_mouse_reviewed$Entry[1:300])
 #' df <-  query_uniprot(query = query, max_keys = 50)
-#' @export
-query_uniprot <- function(query = NULL, columns = c("id", "genes", "organism", "reviewed" ), max_keys = 400, updateProgress = NULL, show_progress = TRUE){
+query_uniprot <- function(query = NULL,
+                          columns = c("id", "genes", "organism", "reviewed" ),
+                          max_keys = 400,
+                          updateProgress = NULL,
+                          show_progress = TRUE){
 
   if(typeof(query) == "list"){
 
@@ -103,7 +120,7 @@ query_uniprot <- function(query = NULL, columns = c("id", "genes", "organism", "
 
       if(show_progress) {
         cat("Querying the UniProt database...\n")
-        pb <- txtProgressBar(min = 0, max = q, style = 3)
+        pb <- utils::txtProgressBar(min = 0, max = q, style = 3)
       }
 
       for(i in 1:q){
@@ -120,7 +137,7 @@ query_uniprot <- function(query = NULL, columns = c("id", "genes", "organism", "
 
         df_list[[i]] <- get_uniprot_data(query = query_short, columns = columns)
 
-        if(show_progress) setTxtProgressBar(pb, i)
+        if(show_progress) utils::setTxtProgressBar(pb, i)
       }
 
       if(show_progress)close(pb)
@@ -147,34 +164,4 @@ query_uniprot <- function(query = NULL, columns = c("id", "genes", "organism", "
 
   return( get_uniprot_data(query = query, columns = columns) )
 
-}
-
-#' list all available query fields
-#'
-#' Prints all available query fields as
-#' listed on the \href{https://www.uniprot.org/help/query-fields}{UniProt website}.
-#' @import XML
-#' @import RCurl
-#' @export
-list_query_fields <- function(){
-  theurl <- getURL('https://www.uniprot.org/help/query-fields',.opts = list(ssl.verifypeer = FALSE) )
-  tables <- readHTMLTable(theurl, stringsAsFactors = FALSE)
-  #tables <- list.clean(tables, fun = is.null, recursive = FALSE)
-  return(tables[[1]]$Field)
-}
-
-#' list all available data columns
-#'
-#' Prints all available data columns as
-#' listed on the \href{https://www.uniprot.org/help/uniprotkb_column_names}{UniProt website}.
-#' @import XML
-#' @import RCurl
-#' @export
-list_data_columns <- function(){
-  theurl <- getURL('https://www.uniprot.org/help/uniprotkb_column_names',.opts = list(ssl.verifypeer = FALSE) )
-  tables <- readHTMLTable(theurl, stringsAsFactors = FALSE)
-  #tables <- list.clean(tables, fun = is.null, recursive = FALSE)
-  data <- do.call(rbind, tables)
-  col_names <- gsub(" ", "_", data[["Column names as displayed in URL"]], fixed = TRUE)
-  return(col_names)
 }

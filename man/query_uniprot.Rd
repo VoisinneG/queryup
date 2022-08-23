@@ -13,11 +13,13 @@ query_uniprot(
 )
 }
 \arguments{
-\item{query}{list of keys corresponding to uniprot's query fields. For example :
-query = list("gene_exact" = c("Pik3r1", "Pik3r2"), "organism" = c("10090", "9606"), "reviewed" = "yes")}
+\item{query}{list of keys corresponding to uniprot's query fields.
+For example :
+query = list("gene_exact" = c("Pik3r1", "Pik3r2"),
+"organism" = c("10090", "9606"), "reviewed" = "yes")}
 
-\item{columns}{names of uniprot data columns to retrieve. Examples include "id",
-"genes", "keywords", "sequence"}
+\item{columns}{names of uniprot data columns to retrieve.
+Examples include "id", "genes", "keywords", "sequence".}
 
 \item{max_keys}{maximum number of field items submitted}
 
@@ -32,12 +34,13 @@ a data.frame
 Retrieve data from uniprot using uniprot's REST API.
 To avoid non-responsive queries, they are splitted into
 smaller queries with at most \code{max_keys} items per query field.
-Not that it works only with queries where items within query fields are collapse with '+or+' and different
-query fields are collapsed with '+and+' (see \code{query_uniprot()})
+Not that it works only with queries where items within query fields are
+collapsed with '+OR+' and different
+query fields are collapsed with '+AND+' (see \code{query_uniprot()})
 }
 \examples{
 # Query all reviewed UniProt entries for Mus musculus:
-query = list("organism" = c("10090"), "reviewed" = "yes")
+query = list("organism_id" = c("10090"), "reviewed" = "yes")
 df_mouse_reviewed <-  query_uniprot(query = query)
 
 #Splitting long queries:

@@ -6,15 +6,20 @@
 \usage{
 get_uniprot_data(
   query = NULL,
+  base_url = "https://rest.uniprot.org/uniprotkb/",
   columns = c("id", "genes", "organism", "reviewed")
 )
 }
 \arguments{
-\item{query}{list of keys corresponding to uniprot's query fields. For example :
-list("gene_exact" = c("Pik3r1", "Pik3r2") , "organism" = c("10090", "9606"), "reviewed" = "yes")}
+\item{query}{list of keys corresponding to uniprot's query fields.
+For example :
+list("gene_exact" = c("Pik3r1", "Pik3r2") ,
+"organism" = c("10090", "9606"), "reviewed" = "yes")}
 
-\item{columns}{names of uniprot data columns to retrieve. Examples include "id",
-"genes", "keywords", "sequence"}
+\item{base_url}{base URL for the UniProt REST API}
+
+\item{columns}{names of uniprot data columns to retrieve.
+Examples include "id", "genes", "keywords", "sequence"}
 }
 \value{
 a data.frame
@@ -26,7 +31,7 @@ Retrieve data from uniprot using uniprot's REST API
 #Getting gene names, keywords and protein sequences associated with a set of uniprot IDs.
 ids <- c("P22682", "P47941")
 cols <- c("id", "genes", "keywords", "sequence")
-df <- get_uniprot_data(query = list("id" = ids), columns = cols)
+df <- get_uniprot_data(query = list("accession_id" = ids), columns = cols)
 
 #Lists all entries describing interactions with the protein described by entry P00520.
 df <- get_uniprot_data(query = list("interactor" = "P00520"), columns = cols)
