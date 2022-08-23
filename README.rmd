@@ -42,7 +42,7 @@ By default, `query_uniprot()` returns a dataframe with  protein ids, gene names,
 
 ```{r message=FALSE, warnings=FALSE}
 df <- query_uniprot(query, 
-                    columns = c("id", "sequence", "keyword"),
+                    columns = c("id", "sequence", "keyword", "gene_primary"),
                     show_progress = FALSE)
 
 ```

@@ -54,12 +54,9 @@ columns to retrieve using the `columns` parameter.
 
 ``` r
 df <- query_uniprot(query, 
-                    columns = c("id", "sequence", "keyword"),
+                    columns = c("id", "sequence", "keyword", "gene_primary"),
                     show_progress = FALSE)
 ```
-
-    ## Warning in (function (..., deparse.level = 1) : number of columns of result is
-    ## not a multiple of vector length (arg 4)
 
 See this [web page](https://www.uniprot.org/help/uniprotkb_column_names)
 for all availbale UniProt data columns. Note that the parameter
@@ -70,7 +67,8 @@ frame do not necessarily match.
 names(df)
 ```
 
-    ## [1] "Entry Name" "Sequence"   "Keywords"
+    ## [1] "Entry Name"           "Sequence"             "Keywords"            
+    ## [4] "Gene Names (primary)"
 
 ``` r
 as.character(df$Sequence[1])
