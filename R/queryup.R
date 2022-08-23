@@ -6,7 +6,7 @@
 #' "organism" = c("10090", "9606"), "reviewed" = "yes")
 #' @param base_url base URL for the UniProt REST API
 #' @param columns names of uniprot data columns to retrieve.
-#' Examples include "id", "genes", "keywords", "sequence"
+#' Examples include "id", "gene_names", "keyword", "sequence"
 #' @return a data.frame
 #' @importFrom RCurl getURL
 #' @export
@@ -14,14 +14,14 @@
 #' @examples
 #' #Getting gene names, keywords and protein sequences associated with a set of uniprot IDs.
 #' ids <- c("P22682", "P47941")
-#' cols <- c("id", "genes", "keywords", "sequence")
+#' cols <- c("id", "gene_names", "keyword", "sequence")
 #' df <- get_uniprot_data(query = list("accession_id" = ids), columns = cols)
 #'
 #' #Lists all entries describing interactions with the protein described by entry P00520.
 #' df <- get_uniprot_data(query = list("interactor" = "P00520"), columns = cols)
 get_uniprot_data <- function(query = NULL,
                              base_url = "https://rest.uniprot.org/uniprotkb/",
-                             columns = c("id", "genes", "organism", "reviewed" )){
+                             columns = c("id", "gene_names", "organism_name", "reviewed" )){
 
   df <- NULL
 
@@ -41,10 +41,11 @@ get_uniprot_data <- function(query = NULL,
     }
     cols <- paste(columns, collapse = ",")
 
-    full_url <- paste(base_url, 'stream?query=', full_query,
-                      '&format=tsv&columns=', cols,
+    full_url <- paste(base_url, 'stream?query=',
+                      full_query,
+                      '&format=tsv',
+                      '&fields=', paste(cols, sep = ","),
                       sep = "")
-
 
     res <- try(
       RCurl::getURL(full_url), silent = TRUE)
@@ -83,7 +84,7 @@ get_uniprot_data <- function(query = NULL,
 #' @param query list of keys corresponding to uniprot's query fields.
 #' For example :
 #' query = list("gene_exact" = c("Pik3r1", "Pik3r2"),
-#' "organism" = c("10090", "9606"), "reviewed" = "yes")
+#' "organism_id" = c("10090", "9606"), "reviewed" = "true")
 #' @param columns names of uniprot data columns to retrieve.
 #' Examples include "id", "genes", "keywords", "sequence".
 #' @param max_keys maximum number of field items submitted
@@ -102,7 +103,7 @@ get_uniprot_data <- function(query = NULL,
 #' query = list("id" = df_mouse_reviewed$Entry[1:300])
 #' df <-  query_uniprot(query = query, max_keys = 50)
 query_uniprot <- function(query = NULL,
-                          columns = c("id", "genes", "organism", "reviewed" ),
+                          columns = c("id", "gene_names", "organism_name", "reviewed" ),
                           max_keys = 400,
                           updateProgress = NULL,
                           show_progress = TRUE){

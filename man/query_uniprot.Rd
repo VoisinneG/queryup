@@ -6,7 +6,7 @@
 \usage{
 query_uniprot(
   query = NULL,
-  columns = c("id", "genes", "organism", "reviewed"),
+  columns = c("id", "gene_names", "organism_name", "reviewed"),
   max_keys = 400,
   updateProgress = NULL,
   show_progress = TRUE
@@ -16,7 +16,7 @@ query_uniprot(
 \item{query}{list of keys corresponding to uniprot's query fields.
 For example :
 query = list("gene_exact" = c("Pik3r1", "Pik3r2"),
-"organism" = c("10090", "9606"), "reviewed" = "yes")}
+"organism_id" = c("10090", "9606"), "reviewed" = "true")}
 
 \item{columns}{names of uniprot data columns to retrieve.
 Examples include "id", "genes", "keywords", "sequence".}
