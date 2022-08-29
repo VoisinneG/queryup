@@ -47,7 +47,7 @@ df <- query_uniprot(query,
 
 ```
 
-See this [web page](https://www.uniprot.org/help/uniprotkb_column_names) for all availbale UniProt data columns.
+See this [web page](https://www.uniprot.org/help/return_fields) for all availbale UniProt data columns.
 Note that the parameter `columns` and the name of the corresponding column in the output data frame do not necessarily match.
 
 ```{r}
