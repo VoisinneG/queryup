@@ -22,39 +22,42 @@
 get_uniprot_data <- function(query = NULL,
                              base_url = "https://rest.uniprot.org/uniprotkb/",
                              columns = c("accession", "id", "gene_names",
-                                         "organism_name", "reviewed" )){
+                                         "organism_name", "reviewed" ),
+                             print_full_query = FALSE){
 
   df <- NULL
 
-  if(!is.null(query)){
-    if(typeof(query) == "list"){
-      formatted_queries <- sapply(1:length(query),
-                                  function(x){paste(names(query)[x], ":(",
-                                                    paste(query[[x]], collapse = "+OR+"), ")",
-                                                    sep ="")})
+  if(typeof(query) == "list"){
+    formatted_queries <- sapply(1:length(query),
+                                function(x){paste(names(query)[x], ":(",
+                                                  paste(query[[x]], collapse = "+OR+"), ")",
+                                                  sep ="")})
 
-      full_query <- paste(formatted_queries, collapse = "+AND+")
-    }else if(typeof(query) == "character"){
-      full_query <- query
-    }else{
-      message("Query not supported")
-      return(NULL)
-    }
-    cols <- paste(columns, collapse = ",")
+    full_query <- paste(formatted_queries, collapse = "+AND+")
+  }else if(typeof(query) == "character" && length(query) == 1){
+    full_query <- query
+  }else{
+    message("Query not supported")
+    return(NULL)
+  }
 
-    full_url <- paste(base_url, 'stream?query=',
-                      full_query,
-                      '&format=tsv',
-                      '&fields=', paste(cols, sep = ","),
-                      sep = "")
+  cols <- paste(columns, collapse = ",")
 
-    res <- try(
-      RCurl::getURL(full_url), silent = TRUE)
-    if( inherits(res, "try-error") ){
-      message(res)
-      stop(paste0("Accessing UniProt REST API at ", base_url,  " failed"))
-    }
+  full_url <- paste(base_url, 'stream?query=',
+                    full_query,
+                    '&format=tsv',
+                    '&fields=', paste(cols, sep = ","),
+                    sep = "")
 
+  if(print_full_query){
+    print(full_url)
+  }
+
+  res <- try(
+    RCurl::getURL(full_url), silent = TRUE)
+  if( inherits(res, "try-error") ){
+    message(res)
+    stop(paste0("Accessing UniProt REST API at ", base_url,  " failed"))
   }
 
   entries <- strsplit(res, split = "\n")[[1]]
