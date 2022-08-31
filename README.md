@@ -1,7 +1,7 @@
 R package: queryup
 ================
 Guillaume Voisinne
-2022 - 08 - 23
+2022 - 08 - 31
 
 [![Travis-CI Build
 Status](https://travis-ci.org/VoisinneG/queryup.svg?branch=master)](https://travis-ci.org/VoisinneG/queryup)
@@ -58,10 +58,10 @@ df <- query_uniprot(query,
                     show_progress = FALSE)
 ```
 
-See this [web page](https://www.uniprot.org/help/uniprotkb_column_names)
-for all availbale UniProt data columns. Note that the parameter
-`columns` and the name of the corresponding column in the output data
-frame do not necessarily match.
+See this [web page](https://www.uniprot.org/help/return_fields) for all
+availbale UniProt data columns. Note that the parameter `columns` and
+the name of the corresponding column in the output data frame do not
+necessarily match.
 
 ``` r
 names(df)
@@ -96,8 +96,8 @@ df <- query_uniprot(query, show_progress = FALSE)
 print(df)
 ```
 
-    ##   Entry Name  Gene Names             Organism Reviewed
-    ## 2 P85A_HUMAN PIK3R1 GRB1 Homo sapiens (Human) reviewed
+    ##    Entry Entry Name  Gene Names             Organism Reviewed
+    ## 2 P27986 P85A_HUMAN PIK3R1 GRB1 Homo sapiens (Human) reviewed
 
 ## Multiple items per query field
 
@@ -113,8 +113,8 @@ df <- query_uniprot(query, show_progress = FALSE)
 print(df)
 ```
 
-    ##   Entry Name  Gene Names             Organism Reviewed
-    ## 2 P85B_HUMAN      PIK3R2 Homo sapiens (Human) reviewed
-    ## 3 P85B_MOUSE      Pik3r2 Mus musculus (Mouse) reviewed
-    ## 4 P85A_MOUSE      Pik3r1 Mus musculus (Mouse) reviewed
-    ## 5 P85A_HUMAN PIK3R1 GRB1 Homo sapiens (Human) reviewed
+    ##    Entry Entry Name  Gene Names             Organism Reviewed
+    ## 2 O00459 P85B_HUMAN      PIK3R2 Homo sapiens (Human) reviewed
+    ## 3 O08908 P85B_MOUSE      Pik3r2 Mus musculus (Mouse) reviewed
+    ## 4 P26450 P85A_MOUSE      Pik3r1 Mus musculus (Mouse) reviewed
+    ## 5 P27986 P85A_HUMAN PIK3R1 GRB1 Homo sapiens (Human) reviewed
