@@ -5,6 +5,9 @@ Guillaume Voisinne
 
 [![Travis-CI Build
 Status](https://travis-ci.org/VoisinneG/queryup.svg?branch=master)](https://travis-ci.org/VoisinneG/queryup)
+[![R-CMD-check](https://github.com/VoisinneG/queryup/workflows/R-CMD-check/badge.svg)](https://github.com/VoisinneG/queryup/actions)
+[![Codecov test
+coverage](https://codecov.io/gh/VoisinneG/queryup/branch/master/graph/badge.svg)](https://codecov.io/gh/VoisinneG/queryup?branch=master)
 
 The `queryup` R package aims to facilitate retrieving information from
 the UniProt database using R. Programmatic access to the UniProt
