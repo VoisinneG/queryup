@@ -1,7 +1,7 @@
 R package: queryup
 ================
 Guillaume Voisinne
-2022 - 08 - 31
+2022 - 09 - 01
 
 [![Travis-CI Build
 Status](https://travis-ci.org/VoisinneG/queryup.svg?branch=master)](https://travis-ci.org/VoisinneG/queryup)
@@ -17,6 +17,7 @@ Install the package from github using devtools:
 
 ``` r
 devtools::install_github("VoisinneG/queryup")
+library(queryup)
 ```
 
 ## Queries
@@ -32,7 +33,6 @@ will return the UniProt ids of all proteins encoded by gene *Pik3r1* in
 *Homo sapiens* (taxon: 9606).
 
 ``` r
-library(queryup)
 query <- list( "gene_exact" = "Pik3r1", "organism_id" = "9606" )
 df <- query_uniprot(query, columns = c("id", "gene_names"), show_progress = FALSE)
 head(df)
