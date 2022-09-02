@@ -31,11 +31,11 @@ a data.frame
 Retrieve data from uniprot using uniprot's REST API
 }
 \examples{
-#Getting gene names, keywords and protein sequences associated with a set of uniprot IDs.
+#Getting gene names, keywords and protein sequences for a set of UniProt IDs.
 ids <- c("P22682", "P47941")
 cols <- c("accession", "id", "gene_names", "keyword", "sequence")
 df <- get_uniprot_data(query = list("accession_id" = ids), columns = cols)
 
-#Lists all entries describing interactions with the protein described by entry P00520.
+#Lists all entries describing interactions for entry P00520.
 df <- get_uniprot_data(query = list("interactor" = "P00520"), columns = cols)
 }

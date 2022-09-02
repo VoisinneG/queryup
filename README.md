@@ -1,10 +1,8 @@
 R package: queryup
 ================
 Guillaume Voisinne
-2022 - 09 - 01
+2022 - 09 - 02
 
-[![Travis-CI Build
-Status](https://travis-ci.org/VoisinneG/queryup.svg?branch=master)](https://travis-ci.org/VoisinneG/queryup)
 [![R-CMD-check](https://github.com/VoisinneG/queryup/workflows/R-CMD-check/badge.svg)](https://github.com/VoisinneG/queryup/actions)
 [![Codecov test
 coverage](https://codecov.io/gh/VoisinneG/queryup/branch/master/graph/badge.svg)](https://codecov.io/gh/VoisinneG/queryup?branch=master)
@@ -41,13 +39,13 @@ df <- query_uniprot(query, columns = c("id", "gene_names"), show_progress = FALS
 head(df)
 ```
 
-    ##         Entry Name          Gene Names
-    ## 2 A0A2X0SFG1_HUMAN              PIK3R1
-    ## 3       P85A_HUMAN         PIK3R1 GRB1
-    ## 4 A0A1D8GZE0_HUMAN NR4A3 PIK3R1 fusion
-    ## 5 A0A1D8GZE1_HUMAN PIK3R1 NR4A3 fusion
-    ## 6     E5RGI8_HUMAN              PIK3R1
-    ## 7     E5RHI0_HUMAN              PIK3R1
+    ##        Entry       Entry Name          Gene Names
+    ## 2 A0A2X0SFG1 A0A2X0SFG1_HUMAN              PIK3R1
+    ## 3     P27986       P85A_HUMAN         PIK3R1 GRB1
+    ## 4 A0A1D8GZE0 A0A1D8GZE0_HUMAN NR4A3 PIK3R1 fusion
+    ## 5 A0A1D8GZE1 A0A1D8GZE1_HUMAN PIK3R1 NR4A3 fusion
+    ## 6     E5RGI8     E5RGI8_HUMAN              PIK3R1
+    ## 7     E5RHI0     E5RHI0_HUMAN              PIK3R1
 
 ## Columns
 
@@ -70,8 +68,8 @@ necessarily match.
 names(df)
 ```
 
-    ## [1] "Entry Name"           "Sequence"             "Keywords"            
-    ## [4] "Gene Names (primary)"
+    ## [1] "Entry"                "Entry Name"           "Sequence"            
+    ## [4] "Keywords"             "Gene Names (primary)"
 
 ``` r
 as.character(df$Sequence[1])
@@ -121,3 +119,54 @@ print(df)
     ## 3 O08908 P85B_MOUSE      Pik3r2 Mus musculus (Mouse) reviewed
     ## 4 P26450 P85A_MOUSE      Pik3r1 Mus musculus (Mouse) reviewed
     ## 5 P27986 P85A_HUMAN PIK3R1 GRB1 Homo sapiens (Human) reviewed
+
+## Long queries
+
+Because UniProt REST API limits the size of queries, long queries
+containing more than a few hundreds entries cannot be passed in a single
+request. To overcome this limitation, the `queryup` package splits long
+queries into smaller ones. For instance, the dataset `uniprot_entries`
+that is bundled with the `queryup` package contains information for 1000
+UniProt entries. We could get UniProt keywords for these entries using :
+
+``` r
+ids <- uniprot_entries$Entry
+query <- list("accession_id" = ids)
+columns <- c("gene_names", "keyword")
+df <- query_uniprot(query, columns = columns, show_progress = FALSE)
+head(df)
+```
+
+    ##        Entry                 Gene Names
+    ## 2 A0A087WPF7             Auts2 Kiaa0442
+    ## 3 A0A088MLT8 Iqcj-Schip1 Iqschfp Schip1
+    ## 4 A0A0B4J1F4                     Arrdc4
+    ## 5 A0A0B4J1G0               Fcgr4 Fcgr3a
+    ## 6 A0A0G2JDV3                 Gbp6 Mpa2l
+    ## 7 A0A0U1RPR8                     Gucy2d
+    ##                                                                                                                                                                                                               Keywords
+    ## 2                                                                         Alternative splicing;Cell projection;Cytoplasm;Cytoskeleton;Nucleus;Phosphoprotein;Reference proteome;Transcription;Transcription regulation
+    ## 3                                                                                                                                        Alternative splicing;Cell projection;Coiled coil;Cytoplasm;Reference proteome
+    ## 4                                                                                                                   Alternative splicing;Cell membrane;Cytoplasmic vesicle;Endosome;Membrane;Reference proteome;Repeat
+    ## 5 Cell membrane;Disulfide bond;Glycoprotein;IgE-binding protein;IgG-binding protein;Immunity;Immunoglobulin domain;Membrane;Phosphoprotein;Receptor;Reference proteome;Repeat;Signal;Transmembrane;Transmembrane helix
+    ## 6                                                                                                               Antimicrobial;Cytoplasmic vesicle;GTP-binding;Hydrolase;Immunity;Nucleotide-binding;Reference proteome
+    ## 7                                                         Cell membrane;Cell projection;cGMP biosynthesis;Disulfide bond;Lyase;Membrane;Nucleotide-binding;Reference proteome;Signal;Transmembrane;Transmembrane helix
+
+Another usage could be to retrieve protein-protein interactions amongst
+a set of UniProt entries:
+
+``` r
+ids <- sample(uniprot_entries$Entry, 400)
+query <- list("accession_id" = ids, "interactor"= ids)
+columns <- "cc_interaction"
+df <- query_uniprot(query = query, columns = columns, show_progress = FALSE)
+head(df)
+```
+
+    ##     Entry                         Interacts with
+    ## 2  E9Q401 Q6PHZ2; Q9Z2I2; Q8K4S1; E9Q401; P23327
+    ## 23 A2A259                         Q2EG98; A2A259
+    ## 3  A2AG06                         B2RR83; Q9H6S0
+    ## 4  B2RR83                                 A2AG06
+    ## 5  E9QAG8                         O09106; P70288
+    ## 6  O08808         Q8BKX1; O08808; P46940; P61586

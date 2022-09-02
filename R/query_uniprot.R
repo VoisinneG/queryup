@@ -23,78 +23,91 @@
 #'
 #' @examples
 #' # Query all reviewed UniProt entries for Mus musculus:
-#' query = list("organism_id" = c("10090"), "reviewed" = "yes")
+#' query = list("organism_id" = c("10090"), "reviewed" = "true")
 #' df_mouse_reviewed <-  query_uniprot(query = query)
 #' head(df_mouse_reviewed)
 #'
-#' #Splitting long queries:
-#' query = list("id" = df_mouse_reviewed$Entry[1:300])
-#' df <-  query_uniprot(query = query, max_keys = 50)
-#' head(df)
+#' # List protein interactions within a set of UniProt entries
+#' ids <- sample(df_mouse_reviewed$Entry, 400)
+#' query <- list("accession_id" = ids, "interactor"= ids)
+#' columns = c("accession", "cc_interaction")
+#' res <- query_uniprot(query = query, columns = columns)
+#' res
 query_uniprot <- function(query = NULL,
-                          columns = c("accession", "id", "gene_names", "organism_name", "reviewed" ),
+                          columns = c("accession",
+                                      "id",
+                                      "gene_names",
+                                      "organism_name",
+                                      "reviewed"),
                           print_url = FALSE,
                           max_keys = 300,
                           updateProgress = NULL,
-                          show_progress = TRUE){
+                          show_progress = TRUE) {
 
-  if(max_keys > 300){
+  if (max_keys > 300) {
     stop("Parameter 'max_keys' should not exceed 300.")
   }
 
-  if(typeof(query) == "list"){
+  n_max <- max_keys / length(query)
 
-    idx_long <- which( sapply(query, length) > max_keys )
+  if (typeof(query) == "list") {
 
-    if(length(idx_long)==1){
+    idx_long <- which(sapply(query, length) > n_max)
 
-      r <- length(query[[idx_long]]) %% max_keys
-      q <- length(query[[idx_long]]) %/% max_keys
-      if(r>0) q <- q+1
+    if (length(idx_long) == 1) {
+
+      r <- length(query[[idx_long]]) %% n_max
+      q <- length(query[[idx_long]]) %/% n_max
+
+      if (r > 0) q <- q + 1
+
       df_list <- vector("list", length = q)
 
-      if(show_progress) {
+      if (show_progress) {
         cat("Querying the UniProt database...\n")
         pb <- utils::txtProgressBar(min = 0, max = q, style = 3)
       }
 
-      for(i in 1:q){
+      for (i in 1:q) {
 
-        i_start <- (i-1)*max_keys + 1
-        i_end <- min(i*max_keys, length(query[[idx_long]]))
+        i_start <- (i - 1) * n_max + 1
+        i_end <- min(i * n_max, length(query[[idx_long]]))
         query_short <- query
-        query_short[[idx_long]] <- query[[idx_long]][ i_start : i_end]
+        query_short[[idx_long]] <- query[[idx_long]][i_start : i_end]
 
         if (is.function(updateProgress)) {
-          text = paste(i_end, " / ", length(query[[idx_long]]), sep = "")
-          updateProgress(value = as.numeric( format(i/q*100, digits = 0) ), detail = text)
+          text <- paste(i_end, " / ", length(query[[idx_long]]), sep = "")
+          updateProgress(value = as.numeric(format(i / q * 100, digits = 0)),
+                         detail = text)
         }
 
         df_list[[i]] <- get_uniprot_data(query = query_short,
                                          columns = columns,
                                          print_url = print_url)$content
 
-        if(show_progress) utils::setTxtProgressBar(pb, i)
+        if (show_progress) utils::setTxtProgressBar(pb, i)
       }
 
-      if(show_progress)close(pb)
+      if (show_progress) close(pb)
 
       return(do.call(rbind, df_list))
 
-    }else{
-      for(i in idx_long){
+    }else {
+
+      for (i in idx_long) {
         query_split <- vector("list", 2)
 
         query_split[[1]] <- query
         query_split[[2]] <- query
 
-        query_split[[1]][[i]] <- query[[i]][1:max_keys]
-        query_split[[2]][[i]] <- query[[i]][(max_keys+1):length(query[[i]])]
+        query_split[[1]][[i]] <- query[[i]][1:n_max]
+        query_split[[2]][[i]] <- query[[i]][(n_max + 1):length(query[[i]])]
 
         df_list <- lapply(query_split, query_uniprot,
                           columns = columns,
                           print_url = print_url,
-                          max_keys = max_keys)
+                          max_keys = max_keys,
+                          show_progress = show_progress)
 
         return(do.call(rbind, df_list))
       }
@@ -102,8 +115,8 @@ query_uniprot <- function(query = NULL,
 
   }
 
-  return( get_uniprot_data(query = query,
-                           columns = columns,
-                           print_url = print_url)$content )
+  return(get_uniprot_data(query = query,
+                          columns = columns,
+                          print_url = print_url)$content)
 
 }

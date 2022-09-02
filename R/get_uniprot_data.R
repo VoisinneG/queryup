@@ -14,64 +14,86 @@
 #' @export
 #'
 #' @examples
-#' #Getting gene names, keywords and protein sequences associated with a set of uniprot IDs.
+#' #Getting gene names, keywords and protein sequences for a set of UniProt IDs.
 #' ids <- c("P22682", "P47941")
 #' cols <- c("accession", "id", "gene_names", "keyword", "sequence")
 #' df <- get_uniprot_data(query = list("accession_id" = ids), columns = cols)
 #'
-#' #Lists all entries describing interactions with the protein described by entry P00520.
+#' #Lists all entries describing interactions for entry P00520.
 #' df <- get_uniprot_data(query = list("interactor" = "P00520"), columns = cols)
 get_uniprot_data <- function(query = NULL,
                              base_url = "https://rest.uniprot.org/uniprotkb/",
-                             columns = c("accession", "id", "gene_names",
-                                         "organism_name", "reviewed" ),
-                             print_url = FALSE){
+                             columns = c("accession",
+                                         "id",
+                                         "gene_names",
+                                         "organism_name",
+                                         "reviewed"),
+                             print_url = FALSE) {
 
 
   # format url from function arguments
-  if(typeof(query) == "list"){
-    formatted_queries <- sapply(1:length(query),
-                                function(x){paste(names(query)[x], ":(",
-                                                  paste(query[[x]], collapse = "+OR+"), ")",
-                                                  sep ="")})
+  if (typeof(query) == "list") {
+    formatted_queries <- sapply(seq_along(query),
+                                function(x) {
+                                  paste(names(query)[x],
+                                        ":(",
+                                        paste(query[[x]],
+                                              collapse = "+OR+"),
+                                        ")",
+                                        sep = "")})
 
     full_query <- paste(formatted_queries, collapse = "+AND+")
-  }else if(typeof(query) == "character" && length(query) == 1){
+  }else if (typeof(query) == "character" && length(query) == 1) {
     full_query <- query
-  }else{
+  }else {
     message("Query not supported")
     return(NULL)
+  }
+
+  if (! "accession" %in% columns) {
+    columns <- c("accession", columns)
   }
 
   cols <- paste(columns, collapse = ",")
 
   full_url <- paste(base_url,
-                    'stream?query=',
+                    "stream?query=",
                     full_query,
-                    '&fields=', paste(cols, sep = ","),
+                    "&fields=", paste(cols, sep = ","),
                     sep = "")
 
-  if(print_url){
-    print(full_url)
+  if (print_url) {
+    message(paste0("\nQuery URL:\n",  full_url))
   }
 
   # Check for error messages
   content <- jsonlite::fromJSON(RCurl::getURL(full_url))
   messages <- content$messages
 
-  if(!is.null(messages)){
+  if (!is.null(messages)) {
+
+    extra_message <- NULL
+    n_query_items <- length(unlist(query))
+    if (n_query_items > 300) {
+      extra_message <- sprintf(
+        "\nQuery has %s items and is probably too long.\n",
+        n_query_items)
+    }
+
     warning(
-      sprintf(
-        "\nUniProt API request failed : \n%s",
-        messages
+      paste0(
+        "\nUniProt API request failed : \n",
+        messages,
+        extra_message
       ),
       call. = FALSE
     )
 
+    return(list(url = full_url, content = NULL))
   }
 
   # get query results in tab separated values format
-  full_url_format <- paste0(full_url, '&format=tsv')
+  full_url_format <- paste0(full_url, "&format=tsv")
 
   res <- RCurl::getURL(full_url_format)
 
@@ -79,11 +101,11 @@ get_uniprot_data <- function(query = NULL,
 
   df <- as.data.frame(do.call(rbind,
                               lapply(entries,
-                                     function(x){
+                                     function(x) {
                                        strsplit(x, split = "\t")[[1]]
                                      })))
   names <- df[1, ]
-  df <- df[-1, ]
+  df <- as.data.frame(df[-1, ])
   names(df) <- names
 
   return(list(url = full_url, content = df))

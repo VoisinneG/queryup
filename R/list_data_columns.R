@@ -1,5 +1,6 @@
 #' list all available data columns
 #' @export
-list_data_columns <- function(){
-  message("See 'https://www.uniprot.org/help/return_fields' for all available query fields")
+list_data_columns <- function() {
+  url <- "https://www.uniprot.org/help/return_fields"
+  message(paste0("See '", url, "' for all available return fields"))
 }

@@ -43,12 +43,14 @@ query fields are collapsed with '+AND+' (see \code{query_uniprot()})
 }
 \examples{
 # Query all reviewed UniProt entries for Mus musculus:
-query = list("organism_id" = c("10090"), "reviewed" = "yes")
+query = list("organism_id" = c("10090"), "reviewed" = "true")
 df_mouse_reviewed <-  query_uniprot(query = query)
 head(df_mouse_reviewed)
 
-#Splitting long queries:
-query = list("id" = df_mouse_reviewed$Entry[1:300])
-df <-  query_uniprot(query = query, max_keys = 50)
-head(df)
+# List protein interactions within a set of UniProt entries
+ids <- sample(df_mouse_reviewed$Entry, 400)
+query <- list("accession_id" = ids, "interactor"= ids)
+columns = c("accession", "cc_interaction")
+res <- query_uniprot(query = query, columns = columns)
+res
 }
