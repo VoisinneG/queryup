@@ -9,7 +9,7 @@ Imports:
   utils,
   jsonlite,
   RCurl
-License: GPL (>= 3) + file LICENSE
+License: GPL-3
 Encoding: UTF-8
 RoxygenNote: 7.1.2
 Suggests:
