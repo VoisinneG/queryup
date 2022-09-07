@@ -6,7 +6,7 @@
 \usage{
 get_uniprot_data(
   query = NULL,
-  columns = c("accession", "id", "gene_names", "organism_name", "reviewed"),
+  columns = c("accession", "id", "gene_names", "organism_id", "reviewed"),
   print_url = FALSE,
   print_uniprot_messages = FALSE
 )
