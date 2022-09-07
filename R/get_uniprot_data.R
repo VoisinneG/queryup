@@ -1,10 +1,10 @@
-#' Retrieve data from uniprot using uniprot's REST API
+#' Retrieve data from UniProt using UniProt's REST API
 #'
-#' @param query list of keys corresponding to uniprot's query fields.
+#' @param query list of keys corresponding to UniProt's query fields.
 #' For example :
 #' list("gene_exact" = c("Pik3r1", "Pik3r2") ,
 #' "organism" = c("10090", "9606"), "reviewed" = "yes")
-#' @param columns names of uniprot data columns to retrieve.
+#' @param columns names of UniProt data columns to retrieve.
 #' Examples include "accession", "id", "gene_names", "keyword", "sequence"
 #' @param print_url Boolean. Prints the complete url used for the query.
 #' @param print_uniprot_messages Boolean. Prints the raw error message returned
@@ -101,11 +101,11 @@ get_uniprot_data <- function(query = NULL,
 
 #' Accessory function used to build the query url
 #'
-#' @param query list of keys corresponding to uniprot's query fields.
+#' @param query list of keys corresponding to UniProt's query fields.
 #' For example :
 #' list("gene_exact" = c("Pik3r1", "Pik3r2") ,
 #' "organism" = c("10090", "9606"), "reviewed" = "yes")
-#' @param columns names of uniprot data columns to retrieve.
+#' @param columns names of UniProt data columns to retrieve.
 #' @param format format of the response provided by the UniProt API
 #' @return the query url
 #' @examples

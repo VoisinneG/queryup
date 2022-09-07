@@ -2,7 +2,7 @@
 % Please edit documentation in R/query_uniprot.R
 \name{query_uniprot}
 \alias{query_uniprot}
-\title{Retrieve data from uniprot using uniprot's REST API.}
+\title{Retrieve data from UniProt using UniProt's REST API.}
 \usage{
 query_uniprot(
   query = NULL,
@@ -15,12 +15,12 @@ query_uniprot(
 )
 }
 \arguments{
-\item{query}{list of keys corresponding to uniprot's query fields.
+\item{query}{list of keys corresponding to UniProt's query fields.
 For example :
 query = list("gene_exact" = c("Pik3r1", "Pik3r2"),
 "organism_id" = c("10090", "9606"), "reviewed" = "true")}
 
-\item{columns}{names of uniprot data columns to retrieve.
+\item{columns}{names of UniProt data columns to retrieve.
 Examples include "accession", "id", "genes", "keywords", "sequence".}
 
 \item{print_url}{logical. Prints the complete url used for the query.}
@@ -38,21 +38,21 @@ by UniProt.}
 a data.frame
 }
 \description{
-Retrieve data from uniprot using uniprot's REST API.
-To avoid non-responsive queries, they are splitted into
+Retrieve data from UniProt using UniProt's REST API.
+To avoid non-responsive queries, they are split into
 smaller queries with at most \code{max_keys} items per query field.
 Not that it works only with queries where items within query fields are
 collapsed with '+OR+' and different
 query fields are collapsed with '+AND+' (see \code{query_uniprot()})
 }
 \examples{
-# Query all reviewed UniProt entries for Mus musculus:
-query = list("organism_id" = c("10090"), "reviewed" = "true")
-df_mouse_reviewed <-  query_uniprot(query = query)
-head(df_mouse_reviewed)
+# Get the UniProt entries of all proteins encoded by gene Pik3r1
+query <- list("gene_exact" = "Pik3r1")
+df <-  query_uniprot(query = query)
+head(df)
 
 # List protein interactions within a set of UniProt entries
-ids <- sample(df_mouse_reviewed$Entry, 400)
+ids <- sample(uniprot_entries$Entry, 200)
 query <- list("accession_id" = ids, "interactor"= ids)
 columns = c("accession", "cc_interaction")
 res <- query_uniprot(query = query, columns = columns)

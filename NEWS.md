@@ -1,6 +1,6 @@
 # queryup 1.0.0
 
-* `queryup` is now compatible with the latest UNiProt REST API (rest.uniprot.org)
+* `queryup` is now compatible with the latest UniProt REST API (rest.uniprot.org)
 * messages are more informative and will let you know invalid query fields,
 invalid return fields and invalid entries
 * `queryup` filters out invalid UniProt entries from queries

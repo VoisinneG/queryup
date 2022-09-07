@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_uniprot_data.R
 \name{get_uniprot_data}
 \alias{get_uniprot_data}
-\title{Retrieve data from uniprot using uniprot's REST API}
+\title{Retrieve data from UniProt using UniProt's REST API}
 \usage{
 get_uniprot_data(
   query = NULL,
@@ -12,12 +12,12 @@ get_uniprot_data(
 )
 }
 \arguments{
-\item{query}{list of keys corresponding to uniprot's query fields.
+\item{query}{list of keys corresponding to UniProt's query fields.
 For example :
 list("gene_exact" = c("Pik3r1", "Pik3r2") ,
 "organism" = c("10090", "9606"), "reviewed" = "yes")}
 
-\item{columns}{names of uniprot data columns to retrieve.
+\item{columns}{names of UniProt data columns to retrieve.
 Examples include "accession", "id", "gene_names", "keyword", "sequence"}
 
 \item{print_url}{Boolean. Prints the complete url used for the query.}
@@ -29,7 +29,7 @@ by UniProt.}
 a data.frame
 }
 \description{
-Retrieve data from uniprot using uniprot's REST API
+Retrieve data from UniProt using UniProt's REST API
 }
 \examples{
 #Getting gene names, keywords and protein sequences for a set of UniProt IDs.

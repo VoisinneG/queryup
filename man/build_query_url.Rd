@@ -11,12 +11,12 @@ build_query_url(
 )
 }
 \arguments{
-\item{query}{list of keys corresponding to uniprot's query fields.
+\item{query}{list of keys corresponding to UniProt's query fields.
 For example :
 list("gene_exact" = c("Pik3r1", "Pik3r2") ,
 "organism" = c("10090", "9606"), "reviewed" = "yes")}
 
-\item{columns}{names of uniprot data columns to retrieve.}
+\item{columns}{names of UniProt data columns to retrieve.}
 
 \item{format}{format of the response provided by the UniProt API}
 }

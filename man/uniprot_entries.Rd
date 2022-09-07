@@ -3,7 +3,7 @@
 \docType{data}
 \name{uniprot_entries}
 \alias{uniprot_entries}
-\title{Information for 1000 UniProt entries in Mus musculus}
+\title{Information for 1000 UniProt entries from the organism Mus musculus}
 \format{
 A data frame with 1000 rows and 5 variables:
 \describe{
@@ -15,13 +15,13 @@ A data frame with 1000 rows and 5 variables:
 }
 }
 \source{
-\url{http://www.uniprot.org/}
+\url{https://www.uniprot.org/}
 }
 \usage{
 uniprot_entries
 }
 \description{
-A dataset containing entry names and other attributes of 1000 UniProt entries
+Entry names and other attributes of 1000 UniProt entries
 in Mus musculus.
 }
 \keyword{datasets}

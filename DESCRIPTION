@@ -5,10 +5,9 @@ Version: 1.0.0
 Authors@R: 
     person("Guillaume", "Voisinne", , "voisinne@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-3922-2121"))
-Author: Guillaume Voisinne [aut, cre]
 Maintainer: Guillaume Voisinne <voisinne@gmail.com>
-Description: This package aims to facilitate retrieving information from
-    the uniprot database using R.
+Description: Retrieve protein information from
+    the UniProt database using R.
 License: GPL-3
 URL: https://github.com/VoisinneG/queryup
 BugReports: https://github.com/VoisinneG/queryup/issues

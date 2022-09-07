@@ -5,7 +5,7 @@ Guillaume Voisinne
 
 [![R-CMD-check](https://github.com/VoisinneG/queryup/workflows/R-CMD-check/badge.svg)](https://github.com/VoisinneG/queryup/actions)
 [![Codecov test
-coverage](https://codecov.io/gh/VoisinneG/queryup/branch/master/graph/badge.svg)](https://codecov.io/gh/VoisinneG/queryup?branch=master)
+coverage](https://codecov.io/gh/VoisinneG/queryup/branch/master/graph/badge.svg)](https://app.codecov.io/gh/VoisinneG/queryup?branch=master)
 
 The `queryup` R package aims to facilitate retrieving information from
 the UniProt database using R. Programmatic access to the UniProt
@@ -140,7 +140,7 @@ query <- list("accession_id" = ids)
 query_uniprot(query)
 ```
 
-    ## 3 invalid values were found (CON_P22682, P226, REV_P47941) and removed from the query.
+    ## 3 invalid values were found (REV_P47941, P226, CON_P22682) and removed from the query.
 
     ##        Entry     Entry Name Gene Names Organism (ID)   Reviewed
     ## 2 A0A0U1ZFN5 A0A0U1ZFN5_RAT  Cbl c-Cbl         10116 unreviewed
@@ -192,17 +192,17 @@ df <- query_uniprot(query = query, columns = columns, show_progress = FALSE)
 head(df)
 ```
 
-    ##     Entry
-    ## 2  O08785
-    ## 3  O08808
-    ## 4  O54943
-    ## 5  O88273
-    ## 6  O88522
-    ## 21 E9QAG8
-    ##                                                                                                                                                Interacts with
-    ## 2  Q9WTL8; Q9WTL8-2; Q9WTL8-4; P97784; Q9JMK2; Q3U1J4; O54943; P20444; Q923E4; P67870; Q03164; Q14995; P62136; P62140; P36873; P30154; Q14738; Q92753; P51449
-    ## 3                                                                                                                              Q8BKX1; O08808; P46940; P61586
-    ## 4                                                      Q9WTL8; Q91VJ2; Q3TQ03; O08785; P97784; Q9R194; Q9JMK2; Q8C4V4; O35973; O54943; Q60953; Q8N365; P20393
-    ## 5                                                                                                                                                      O88273
-    ## 6                                                                                                      Q60680; O88351; O88522; Q924T7; P62991; P0CG48; P24772
-    ## 21                                                                                                                                             O09106; P70288
+    ##      Entry
+    ## 2   A2A259
+    ## 3   E9Q401
+    ## 4   O54943
+    ## 21  O08547
+    ## 22  O35526
+    ## 211 O88273
+    ##                                                                                             Interacts with
+    ## 2                                                                                           Q2EG98; A2A259
+    ## 3                                                                   Q6PHZ2; Q9Z2I2; Q8K4S1; E9Q401; P23327
+    ## 4   Q9WTL8; Q91VJ2; Q3TQ03; O08785; P97784; Q9R194; Q9JMK2; Q8C4V4; O35973; O54943; Q60953; Q8N365; P20393
+    ## 21                                                                                                  O35526
+    ## 22                                                                  O08547; P60879; P46097; P21707; Q62747
+    ## 211                                                                                                 O88273
