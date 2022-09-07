@@ -14,6 +14,8 @@
 #' @param columns names of uniprot data columns to retrieve.
 #' Examples include "accession", "id", "genes", "keywords", "sequence".
 #' @param print_url logical. Prints the complete url used for the query.
+#' @param print_uniprot_messages Boolean. Prints the raw error message returned
+#' by UniProt.
 #' @param max_keys maximum number of field items submitted
 #' @param updateProgress used to display progress in shiny apps
 #' @param show_progress Show progress bar
@@ -37,9 +39,10 @@ query_uniprot <- function(query = NULL,
                           columns = c("accession",
                                       "id",
                                       "gene_names",
-                                      "organism_name",
+                                      "organism_id",
                                       "reviewed"),
                           print_url = FALSE,
+                          print_uniprot_messages = FALSE,
                           max_keys = 300,
                           updateProgress = NULL,
                           show_progress = TRUE) {
@@ -83,7 +86,9 @@ query_uniprot <- function(query = NULL,
 
         df_list[[i]] <- get_uniprot_data(query = query_short,
                                          columns = columns,
-                                         print_url = print_url)$content
+                                         print_url = print_url,
+                                         print_uniprot_messages =
+                                           print_uniprot_messages)$content
 
         if (show_progress) utils::setTxtProgressBar(pb, i)
       }
@@ -106,6 +111,7 @@ query_uniprot <- function(query = NULL,
         df_list <- lapply(query_split, query_uniprot,
                           columns = columns,
                           print_url = print_url,
+                          print_uniprot_messages = print_uniprot_messages,
                           max_keys = max_keys,
                           show_progress = show_progress)
 

@@ -2,9 +2,15 @@ Package: queryup
 Type: Package
 Title: Query the UniProt REST API using R
 Version: 1.0.0
-Author: Guillaume Voisinne
+Authors@R: c(person("Guillaume", "Voisinne", 
+  email = "voisinne@ciml.univ-mrs.fr",
+  role=c("aut", "cre"),
+  comment = c(ORCID = "0000-0003-3922-2121")))
+Author: Guillaume Voisinne [aut, cre]
 Maintainer: Guillaume Voisinne <voisinne@ciml.univ-mrs.fr>
 Description: This package aims to facilitate retrieving information from the uniprot database using R.
+URL: https://github.com/VoisinneG/queryup
+BugReports: https://github.com/VoisinneG/queryup/issues
 Imports:
   utils,
   jsonlite,

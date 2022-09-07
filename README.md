@@ -1,7 +1,7 @@
 R package: queryup
 ================
 Guillaume Voisinne
-2022 - 09 - 02
+2022 - 09 - 07
 
 [![R-CMD-check](https://github.com/VoisinneG/queryup/workflows/R-CMD-check/badge.svg)](https://github.com/VoisinneG/queryup/actions)
 [![Codecov test
@@ -30,34 +30,37 @@ character vectors named after existing UniProt fields. The list of all
 available fields along with example queries is detailed
 [here](https://www.uniprot.org/help/query-fields). Different query
 fields must be matched simultaneously. For instance, the following query
-will return the UniProt ids of all proteins encoded by gene *Pik3r1* in
-*Homo sapiens* (taxon: 9606).
+uses the fields *gene_exact* to return the UniProt entries of all
+proteins encoded by gene *Pik3r1* :
 
 ``` r
-query <- list( "gene_exact" = "Pik3r1", "organism_id" = "9606" )
-df <- query_uniprot(query, columns = c("id", "gene_names"), show_progress = FALSE)
+query <- list("gene_exact" = "Pik3r1")
+df <- query_uniprot(query, show_progress = FALSE)
 head(df)
 ```
 
-    ##        Entry       Entry Name          Gene Names
-    ## 2 A0A2X0SFG1 A0A2X0SFG1_HUMAN              PIK3R1
-    ## 3     P27986       P85A_HUMAN         PIK3R1 GRB1
-    ## 4 A0A1D8GZE0 A0A1D8GZE0_HUMAN NR4A3 PIK3R1 fusion
-    ## 5 A0A1D8GZE1 A0A1D8GZE1_HUMAN PIK3R1 NR4A3 fusion
-    ## 6     E5RGI8     E5RGI8_HUMAN              PIK3R1
-    ## 7     E5RHI0     E5RHI0_HUMAN              PIK3R1
+    ##        Entry       Entry Name Gene Names Organism (ID)   Reviewed
+    ## 2 A0A096MNU6 A0A096MNU6_PAPAN     PIK3R1          9555 unreviewed
+    ## 3 A0A0D9RTM6 A0A0D9RTM6_CHLSB     PIK3R1         60711 unreviewed
+    ## 4 A0A1S3F3Z7 A0A1S3F3Z7_DIPOR     Pik3r1         10020 unreviewed
+    ## 5 A0A1U7Q814 A0A1U7Q814_MESAU     Pik3r1         10036 unreviewed
+    ## 6 A0A287DCB8 A0A287DCB8_ICTTR     PIK3R1         43179 unreviewed
+    ## 7 A0A2I2ZTD7 A0A2I2ZTD7_GORGO     PIK3R1          9595 unreviewed
 
 ## Columns
 
-By default, `query_uniprot()` returns a dataframe with protein ids, gene
-names, organism and Swiss-Prot review status. You can choose which data
-columns to retrieve using the `columns` parameter.
+By default, `query_uniprot()` returns a dataframe with UniProt accession
+IDs, gene names, organism and Swiss-Prot review status. You can choose
+which data columns to retrieve using the `columns` parameter.
 
 ``` r
 df <- query_uniprot(query, 
                     columns = c("id", "sequence", "keyword", "gene_primary"),
                     show_progress = FALSE)
 ```
+
+    ## Warning in (function (..., deparse.level = 1) : number of columns of result is
+    ## not a multiple of vector length (arg 338)
 
 See this [web page](https://www.uniprot.org/help/return_fields) for all
 availbale UniProt data columns. Note that the parameter `columns` and
@@ -75,13 +78,13 @@ names(df)
 as.character(df$Sequence[1])
 ```
 
-    ## [1] "MSAEGYQYRALYDYKKEREEDIDLHLGDILTVNKGSLVALGFSDGQEARPEEIGWLNGYNETTGERGDFPGTYVEYIGRKKISPPTPKPRPPRPLPVAPGSSKTEADVEQQALTLPDLAEQFAPPDIAPPLLIKLVEAIEKKGLECSTLYRTQSSSNLAELRQLLDCDTPSVDLEMIDVHVLADAFKRYLLDLPNPVIPAAVYSEMISLAPEVQSSEEYIQLLKKLIRSPSIPHQYWLTLQYLLKHFFKLSQTSSKNLLNARVLSEIFSPMLFRFSAASSDNTENLIKVIEILISTEWNERQPAPALPPKPPKPTTVANNGMNNNMSLQDAEWYWGDISREEVNEKLRDTADGTFLVRDASTKMHGDYTLTLRKGGNNKLIKIFHRDGKYGFSDPLTFSSVVELINHYRNESLAQYNPKLDVKLLYPVSKYQQDQVVKEDNIEAVGKKLHEYNTQFQEKSREYDRLYEEYTRTSQEIQMKRTAIEAFNETIKIFEEQCQTQERYSKEYIEKFKREGNEKEIQRIMHNYDKLKSRISEIIDSRRRLEEDLKKQAAEYREIDKRMNSIKPDLIQLRKTRDQYLMWLTQKGVRQKKLNEWLGNENTEDQYSLVEDDEDLPHHDEKTWNVGSSNRNKAENLLRGKRDGTFLVRESSKQGCYACSVVVDGEVKHCVINKTATGYGFAEPYNLYSSLKELVLHYQHTSLVQHNDSLNVTLAYPVYAQQRR"
+    ## [1] "MSAEGYQYRALYDYKKEREEDIDLHLGDILTVNKGSLVALGFSDGQEARPEEIGWLNGYNETTGERGDFPGTYVEYIGRKKISPPTPKPRPPRPLPVAPGSSKTEADVEQQALTLPDLAEQFAPPDVAPPLLIKLVEAIEKKGLECSTLYRTQSSGNLAELRQLLDCDTASVDLEMIDVHILADAFKRYLLDLPNPVIPAAVYSEMISLAQEVQSSEEYIQLLKKLIRSPSIPHQYWLTLQYLLKHFFKLSQTSSKNLLNARVLSEIFSPMLFRFSAASSDNTENLIKVIEILISTEWNERQPAPALPPKPPKPTTVANNGMNNNMSLQDAEWYWGDISREEVNEKLRDTADGTFLVRDASTKMHGDYTLTLRKGGNNKLIKIFHRDGKYGFSDPLTFNSVVELINHYRNESLAQYNPKLDVKLLYPVSKYQQDQVVKEDNIEAVGKKLHEYNTQFQEKSREYDRLYEEYTRTSQEIQMKRTAIEAFNETIKIFEEQCQTQERYSKEYIEKFKREGNEKEIQRIMHNYDKLKSRISEIIDSRRRLEEDLKKQAAEYREIDKRMNSIKPDLIQLRKTRDQYLMWLTQKGVRQKKLNEWLGNENTEDQYSLVEDDEDLPHHDEKTWNVGSSNRNKAENLLRGKRDGTFLVRESSKQGCYACSVVVDGEVKHCVINKTATGYGFAEPYNLYSSLKELVLHYQHTSLVQHNDSLNVTLAYPVYAQDSYFIFQGNMGRMHGNGHSM"
 
 ``` r
 as.character(df$Keywords[1])
 ```
 
-    ## [1] "Coiled coil;Repeat;SH2 domain;SH3 domain;Stress response"
+    ## [1] "Coiled coil;Reference proteome;Repeat;SH2 domain;SH3 domain;Stress response"
 
 ## Combining query fields
 
@@ -97,8 +100,8 @@ df <- query_uniprot(query, show_progress = FALSE)
 print(df)
 ```
 
-    ##    Entry Entry Name  Gene Names             Organism Reviewed
-    ## 2 P27986 P85A_HUMAN PIK3R1 GRB1 Homo sapiens (Human) reviewed
+    ##    Entry Entry Name  Gene Names Organism (ID) Reviewed
+    ## 2 P27986 P85A_HUMAN PIK3R1 GRB1          9606 reviewed
 
 ## Multiple items per query field
 
@@ -114,11 +117,34 @@ df <- query_uniprot(query, show_progress = FALSE)
 print(df)
 ```
 
-    ##    Entry Entry Name  Gene Names             Organism Reviewed
-    ## 2 O00459 P85B_HUMAN      PIK3R2 Homo sapiens (Human) reviewed
-    ## 3 O08908 P85B_MOUSE      Pik3r2 Mus musculus (Mouse) reviewed
-    ## 4 P26450 P85A_MOUSE      Pik3r1 Mus musculus (Mouse) reviewed
-    ## 5 P27986 P85A_HUMAN PIK3R1 GRB1 Homo sapiens (Human) reviewed
+    ##    Entry Entry Name  Gene Names Organism (ID) Reviewed
+    ## 2 O00459 P85B_HUMAN      PIK3R2          9606 reviewed
+    ## 3 O08908 P85B_MOUSE      Pik3r2         10090 reviewed
+    ## 4 P26450 P85A_MOUSE      Pik3r1         10090 reviewed
+    ## 5 P27986 P85A_HUMAN PIK3R1 GRB1          9606 reviewed
+
+## Queries with invalid entries
+
+If a query containing invalid entries is sent to the UniProt REST API,
+an error message is returned and no information about the other
+potentially valid entries can be retrieved. To overcome this limitation,
+`queryup` parses the error messages and remove invalid entries from the
+query. Hence, `query_uniprot()` will return information for valid
+entries only :
+
+``` r
+invalid_ids <- c("P226", "CON_P22682", "REV_P47941")
+valid_ids <- c("A0A0U1ZFN5", "P22682")
+ids <- c(invalid_ids, valid_ids)
+query <- list("accession_id" = ids)
+query_uniprot(query)
+```
+
+    ## 3 invalid values were found (CON_P22682, P226, REV_P47941) and removed from the query.
+
+    ##        Entry     Entry Name Gene Names Organism (ID)   Reviewed
+    ## 2 A0A0U1ZFN5 A0A0U1ZFN5_RAT  Cbl c-Cbl         10116 unreviewed
+    ## 3     P22682      CBL_MOUSE        Cbl         10090   reviewed
 
 ## Long queries
 
@@ -127,12 +153,13 @@ containing more than a few hundreds entries cannot be passed in a single
 request. To overcome this limitation, the `queryup` package splits long
 queries into smaller ones. For instance, the dataset `uniprot_entries`
 that is bundled with the `queryup` package contains information for 1000
-UniProt entries. We could get UniProt keywords for these entries using :
+UniProt entries. We could retrieve the ENSEMBL ids corresponding to
+these entries using :
 
 ``` r
 ids <- uniprot_entries$Entry
 query <- list("accession_id" = ids)
-columns <- c("gene_names", "keyword")
+columns <- c("gene_names", "xref_ensembl")
 df <- query_uniprot(query, columns = columns, show_progress = FALSE)
 head(df)
 ```
@@ -144,13 +171,15 @@ head(df)
     ## 5 A0A0B4J1G0               Fcgr4 Fcgr3a
     ## 6 A0A0G2JDV3                 Gbp6 Mpa2l
     ## 7 A0A0U1RPR8                     Gucy2d
-    ##                                                                                                                                                                                                               Keywords
-    ## 2                                                                         Alternative splicing;Cell projection;Cytoplasm;Cytoskeleton;Nucleus;Phosphoprotein;Reference proteome;Transcription;Transcription regulation
-    ## 3                                                                                                                                        Alternative splicing;Cell projection;Coiled coil;Cytoplasm;Reference proteome
-    ## 4                                                                                                                   Alternative splicing;Cell membrane;Cytoplasmic vesicle;Endosome;Membrane;Reference proteome;Repeat
-    ## 5 Cell membrane;Disulfide bond;Glycoprotein;IgE-binding protein;IgG-binding protein;Immunity;Immunoglobulin domain;Membrane;Phosphoprotein;Receptor;Reference proteome;Repeat;Signal;Transmembrane;Transmembrane helix
-    ## 6                                                                                                               Antimicrobial;Cytoplasmic vesicle;GTP-binding;Hydrolase;Immunity;Nucleotide-binding;Reference proteome
-    ## 7                                                         Cell membrane;Cell projection;cGMP biosynthesis;Disulfide bond;Lyase;Membrane;Nucleotide-binding;Reference proteome;Signal;Transmembrane;Transmembrane helix
+    ##                                                                Ensembl
+    ## 2 ENSMUST00000161226 [A0A087WPF7-1];ENSMUST00000161374 [A0A087WPF7-3];
+    ## 3                                   ENSMUST00000182006 [A0A088MLT8-1];
+    ## 4 ENSMUST00000048068 [A0A0B4J1F4-1];ENSMUST00000118110 [A0A0B4J1F4-2];
+    ## 5                                                  ENSMUST00000078825;
+    ## 6                                                           A0A0G2JDV3
+    ## 7                                                  ENSMUST00000206435;
+
+## Protein-protein interactions
 
 Another usage could be to retrieve protein-protein interactions amongst
 a set of UniProt entries:
@@ -163,10 +192,17 @@ df <- query_uniprot(query = query, columns = columns, show_progress = FALSE)
 head(df)
 ```
 
-    ##     Entry                         Interacts with
-    ## 2  E9Q401 Q6PHZ2; Q9Z2I2; Q8K4S1; E9Q401; P23327
-    ## 23 A2A259                         Q2EG98; A2A259
-    ## 3  A2AG06                         B2RR83; Q9H6S0
-    ## 4  B2RR83                                 A2AG06
-    ## 5  E9QAG8                         O09106; P70288
-    ## 6  O08808         Q8BKX1; O08808; P46940; P61586
+    ##     Entry
+    ## 2  O08785
+    ## 3  O08808
+    ## 4  O54943
+    ## 5  O88273
+    ## 6  O88522
+    ## 21 E9QAG8
+    ##                                                                                                                                                Interacts with
+    ## 2  Q9WTL8; Q9WTL8-2; Q9WTL8-4; P97784; Q9JMK2; Q3U1J4; O54943; P20444; Q923E4; P67870; Q03164; Q14995; P62136; P62140; P36873; P30154; Q14738; Q92753; P51449
+    ## 3                                                                                                                              Q8BKX1; O08808; P46940; P61586
+    ## 4                                                      Q9WTL8; Q91VJ2; Q3TQ03; O08785; P97784; Q9R194; Q9JMK2; Q8C4V4; O35973; O54943; Q60953; Q8N365; P20393
+    ## 5                                                                                                                                                      O88273
+    ## 6                                                                                                      Q60680; O88351; O88522; Q924T7; P62991; P0CG48; P24772
+    ## 21                                                                                                                                             O09106; P70288

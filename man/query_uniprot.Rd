@@ -8,6 +8,7 @@ query_uniprot(
   query = NULL,
   columns = c("accession", "id", "gene_names", "organism_name", "reviewed"),
   print_url = FALSE,
+  print_uniprot_messages = FALSE,
   max_keys = 300,
   updateProgress = NULL,
   show_progress = TRUE
@@ -23,6 +24,9 @@ query = list("gene_exact" = c("Pik3r1", "Pik3r2"),
 Examples include "accession", "id", "genes", "keywords", "sequence".}
 
 \item{print_url}{logical. Prints the complete url used for the query.}
+
+\item{print_uniprot_messages}{Boolean. Prints the raw error message returned
+by UniProt.}
 
 \item{max_keys}{maximum number of field items submitted}
 

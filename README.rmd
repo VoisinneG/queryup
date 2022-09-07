@@ -30,17 +30,17 @@ library(queryup)
 ```
 
 ## Queries
-Queries combine different fields to identify matching database entries. Here, queries are submitted using the function `query_uniprot()`. In the `queryup` R package, a query must be formattted as a list containing character vectors named after existing UniProt fields. The list of all available fields along with example queries is detailed [here](https://www.uniprot.org/help/query-fields). Different query fields must be matched simultaneously. For instance, the following query will return the UniProt ids of all proteins encoded by gene *Pik3r1* in *Homo sapiens* (taxon: 9606). 
+Queries combine different fields to identify matching database entries. Here, queries are submitted using the function `query_uniprot()`. In the `queryup` R package, a query must be formattted as a list containing character vectors named after existing UniProt fields. The list of all available fields along with example queries is detailed [here](https://www.uniprot.org/help/query-fields). Different query fields must be matched simultaneously. For instance, the following query uses the fields *gene_exact* to return the UniProt entries of all proteins encoded by gene *Pik3r1* :
 
 ```{r message=FALSE, warnings=FALSE}
-query <- list( "gene_exact" = "Pik3r1", "organism_id" = "9606" )
-df <- query_uniprot(query, columns = c("id", "gene_names"), show_progress = FALSE)
+query <- list("gene_exact" = "Pik3r1")
+df <- query_uniprot(query, show_progress = FALSE)
 head(df)
 ```
 
 ## Columns
 
-By default, `query_uniprot()` returns a dataframe with  protein ids, gene names, organism and Swiss-Prot review status. You can choose which data columns to retrieve using the `columns` parameter. 
+By default, `query_uniprot()` returns a dataframe with  UniProt accession IDs, gene names, organism and Swiss-Prot review status. You can choose which data columns to retrieve using the `columns` parameter. 
 
 ```{r message=FALSE, warnings=FALSE}
 df <- query_uniprot(query, 
@@ -78,20 +78,34 @@ df <- query_uniprot(query, show_progress = FALSE)
 print(df)
 ```
 
+## Queries with invalid entries
+
+If a query containing invalid entries is sent to the UniProt REST API, an error message is returned and no information about the other potentially  valid entries can be retrieved. To overcome this limitation, `queryup` parses the error messages and remove invalid entries from the query. Hence, `query_uniprot()` will return information for valid entries only :
+
+```{r}
+invalid_ids <- c("P226", "CON_P22682", "REV_P47941")
+valid_ids <- c("A0A0U1ZFN5", "P22682")
+ids <- c(invalid_ids, valid_ids)
+query <- list("accession_id" = ids)
+query_uniprot(query)
+```
+
 ## Long queries
 
-Because UniProt REST API limits the size of queries, long queries containing more than a few hundreds entries cannot be passed in a single request. To overcome this limitation, the `queryup` package splits long queries into smaller ones. For instance, the dataset `uniprot_entries` that is bundled with the `queryup` package contains information for 1000 UniProt entries. We could get UniProt keywords for these entries using :
+Because UniProt REST API limits the size of queries, long queries containing more than a few hundreds entries cannot be passed in a single request. To overcome this limitation, the `queryup` package splits long queries into smaller ones. For instance, the dataset `uniprot_entries` that is bundled with the `queryup` package contains information for 1000 UniProt entries. We could retrieve the ENSEMBL ids corresponding to these entries using :
 
-```{r message=FALSE, warnings=FALSE}
+```{r message=FALSE, warning=FALSE}
 ids <- uniprot_entries$Entry
 query <- list("accession_id" = ids)
-columns <- c("gene_names", "keyword")
+columns <- c("gene_names", "xref_ensembl")
 df <- query_uniprot(query, columns = columns, show_progress = FALSE)
 head(df)
 ```
 
+## Protein-protein interactions
+
 Another usage could be to retrieve protein-protein interactions amongst a set of UniProt entries:
-```{r message=FALSE, warnings=FALSE}
+```{r message=FALSE, warning=FALSE}
 ids <- sample(uniprot_entries$Entry, 400)
 query <- list("accession_id" = ids, "interactor"= ids)
 columns <- "cc_interaction"
