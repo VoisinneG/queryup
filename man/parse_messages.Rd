@@ -20,10 +20,3 @@ identified.
 Accessory function retrieving invalid values from messages returned by
 the UniProt API.
 }
-\examples{
- \dontrun{
-messages <- paste0("The 'accession_id' filter value 'CON_A0A8' has",
- "invalid format. It should be a valid UniProtKB accession")
-parse_messages(messages)
-}
-}

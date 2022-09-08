@@ -1,13 +1,13 @@
 Type: Package
 Package: queryup
-Title: Query the UniProt REST API using R
+Title: Query the 'UniProtKB' REST API
 Version: 1.0.0
 Authors@R: 
     person("Guillaume", "Voisinne", , "voisinne@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-3922-2121"))
 Maintainer: Guillaume Voisinne <voisinne@gmail.com>
 Description: Retrieve protein information from
-    the UniProt database using R.
+    the 'UniProtKB' REST API <https://rest.uniprot.org/uniprotkb/>.
 License: GPL-3
 URL: https://github.com/VoisinneG/queryup
 BugReports: https://github.com/VoisinneG/queryup/issues

@@ -3,9 +3,11 @@
 #' @param query list of keys corresponding to UniProt's query fields.
 #' For example :
 #' list("gene_exact" = c("Pik3r1", "Pik3r2") ,
-#' "organism" = c("10090", "9606"), "reviewed" = "yes")
+#' "organism" = c("10090", "9606"), "reviewed" = "yes").
+#' See `query_fields` for available query fields.
 #' @param columns names of UniProt data columns to retrieve.
-#' Examples include "accession", "id", "gene_names", "keyword", "sequence"
+#' Examples include "accession", "id", "gene_names", "keyword", "sequence".
+#' See `return_fields` for available return fields.
 #' @param print_url Boolean. Prints the complete url used for the query.
 #' @param print_uniprot_messages Boolean. Prints the raw error message returned
 #' by UniProt.
@@ -108,11 +110,6 @@ get_uniprot_data <- function(query = NULL,
 #' @param columns names of UniProt data columns to retrieve.
 #' @param format format of the response provided by the UniProt API
 #' @return the query url
-#' @examples
-#' \dontrun{
-#' query <- list("accession_id" = c("CON_P22682", "P47941"))
-#' build_query_url(query)
-#' }
 build_query_url <- function(query = NULL,
                             columns = c("accession",
                                         "id",
@@ -167,12 +164,6 @@ build_query_url <- function(query = NULL,
 #' @return a data.frame with invalid values (in column "value") and
 #' corresponding query field (in column "field"). NULL if no invalid values are
 #' identified.
-#' @examples
-#'  \dontrun{
-#' messages <- paste0("The 'accession_id' filter value 'CON_A0A8' has",
-#'  "invalid format. It should be a valid UniProtKB accession")
-#' parse_messages(messages)
-#' }
 parse_messages <- function(messages) {
 
   pattern <- "^The '(.+)' filter value '(.+)' has invalid format"
@@ -201,12 +192,6 @@ parse_messages <- function(messages) {
 #' @param df data.frame with invalid values (in column "value") and
 #' corresponding query field (in column "field").
 #' @return the input query without the invalid values
-#' @examples
-#'  \dontrun{
-#' query <- list("accession_id" = c("CON_P22682", "P47941"))
-#' df <- data.frame(field = "accession_id", value = "CON_P22682")
-#' clean(query, df)
-#' }
 clean_query <- function(query, df) {
 
   n_invalid <- dim(df)[1]

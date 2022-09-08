@@ -15,10 +15,12 @@ get_uniprot_data(
 \item{query}{list of keys corresponding to UniProt's query fields.
 For example :
 list("gene_exact" = c("Pik3r1", "Pik3r2") ,
-"organism" = c("10090", "9606"), "reviewed" = "yes")}
+"organism" = c("10090", "9606"), "reviewed" = "yes").
+See `query_fields` for available query fields.}
 
 \item{columns}{names of UniProt data columns to retrieve.
-Examples include "accession", "id", "gene_names", "keyword", "sequence"}
+Examples include "accession", "id", "gene_names", "keyword", "sequence".
+See `return_fields` for available return fields.}
 
 \item{print_url}{Boolean. Prints the complete url used for the query.}
 

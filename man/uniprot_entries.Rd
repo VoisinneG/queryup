@@ -10,8 +10,8 @@ A data frame with 1000 rows and 5 variables:
   \item{Entry}{UniProt entry accession id}
   \item{Entry Name}{UniProt entry name}
   \item{Gene Names}{Gene names}
-  \item{Organism}{Organism name}
-  \item{Reviewed}{SwissProt review status}
+  \item{Organism (ID)}{Taxon ID}
+  \item{Reviewed}{Swiss-Prot review status}
 }
 }
 \source{

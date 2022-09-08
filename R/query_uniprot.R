@@ -10,9 +10,11 @@
 #' @param query list of keys corresponding to UniProt's query fields.
 #' For example :
 #' query = list("gene_exact" = c("Pik3r1", "Pik3r2"),
-#' "organism_id" = c("10090", "9606"), "reviewed" = "true")
+#' "organism_id" = c("10090", "9606"), "reviewed" = "true").
+#' See `query_fields` for available query fields.
 #' @param columns names of UniProt data columns to retrieve.
 #' Examples include "accession", "id", "genes", "keywords", "sequence".
+#' See `return_fields` for available return fields.
 #' @param print_url logical. Prints the complete url used for the query.
 #' @param print_uniprot_messages Boolean. Prints the raw error message returned
 #' by UniProt.

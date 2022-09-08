@@ -1,7 +1,7 @@
 R package: queryup
 ================
 Guillaume Voisinne
-2022 - 09 - 07
+2022 - 09 - 08
 
 [![R-CMD-check](https://github.com/VoisinneG/queryup/workflows/R-CMD-check/badge.svg)](https://github.com/VoisinneG/queryup/actions)
 [![Codecov test
@@ -9,7 +9,7 @@ coverage](https://codecov.io/gh/VoisinneG/queryup/branch/master/graph/badge.svg)
 
 The `queryup` R package aims to facilitate retrieving information from
 the UniProt database using R. Programmatic access to the UniProt
-database is peformed by submitting queries to the [UniProt website REST
+database is performed by submitting queries to the [UniProt website REST
 API](https://www.uniprot.org/help/api_queries).
 
 ## Install
@@ -25,13 +25,14 @@ library(queryup)
 
 Queries combine different fields to identify matching database entries.
 Here, queries are submitted using the function `query_uniprot()`. In the
-`queryup` R package, a query must be formattted as a list containing
-character vectors named after existing UniProt fields. The list of all
-available fields along with example queries is detailed
-[here](https://www.uniprot.org/help/query-fields). Different query
-fields must be matched simultaneously. For instance, the following query
-uses the fields *gene_exact* to return the UniProt entries of all
-proteins encoded by gene *Pik3r1* :
+`queryup` R package, a query must be formatted as a list containing
+character vectors named after existing UniProt fields (available query
+fields can be found in the [API
+documentation](https://www.uniprot.org/help/query-fields) or in the
+package data `query_fields$field`). Different query fields must be
+matched simultaneously. For instance, the following query uses the
+fields *gene_exact* to return the UniProt entries of all proteins
+encoded by gene *Pik3r1* :
 
 ``` r
 query <- list("gene_exact" = "Pik3r1")
@@ -47,11 +48,63 @@ head(df)
     ## 6 A0A287DCB8 A0A287DCB8_ICTTR     PIK3R1         43179 unreviewed
     ## 7 A0A2I2ZTD7 A0A2I2ZTD7_GORGO     PIK3R1          9595 unreviewed
 
+Available query fields can be listed using the package data
+`query_fields`:
+
+``` r
+query_fields$field
+```
+
+    ##  [1] "accession"                                                
+    ##  [2] "active"                                                   
+    ##  [3] "Refer to the page: Sequence Annotations"                  
+    ##  [4] "lit_author"                                               
+    ##  [5] "protein_name"                                             
+    ##  [6] "chebi"                                                    
+    ##  [7] "uniprot_id (/uniref), then uniref_cluster_90 (/uniprotkb)"
+    ##  [8] "xrefcount_pdb (or xref_count)"                            
+    ##  [9] "date_created"                                             
+    ## [10] "database, xref"                                           
+    ## [11] "ec"                                                       
+    ## [12] "Refer to the pages: Comments or Sequence Annotations"     
+    ## [13] "existence"                                                
+    ## [14] "family"                                                   
+    ## [15] "fragment"                                                 
+    ## [16] "gene"                                                     
+    ## [17] "gene_exact"                                               
+    ## [18] "go"                                                       
+    ## [19] "virus_host_name, virus_host_id"                           
+    ## [20] "accession_id"                                             
+    ## [21] "inchikey"                                                 
+    ## [22] "protein_name"                                             
+    ## [23] "interactor"                                               
+    ## [24] "keyword"                                                  
+    ## [25] "length"                                                   
+    ## [26] "mass"                                                     
+    ## [27] "cc_mass_spectrometry"                                     
+    ## [28] "date_modified"                                            
+    ## [29] "protein_name"                                             
+    ## [30] "organelle"                                                
+    ## [31] "organism_name, organism_id"                               
+    ## [32] "plasmid"                                                  
+    ## [33] "proteome"                                                 
+    ## [34] "proteomecomponent"                                        
+    ## [35] "sec_acc"                                                  
+    ## [36] "reviewed"                                                 
+    ## [37] "scope"                                                    
+    ## [38] "sec_acc"                                                  
+    ## [39] "sequence"                                                 
+    ## [40] "date_sequence_modified"                                   
+    ## [41] "strain"                                                   
+    ## [42] "taxonomy_name, taxonomy_id"                               
+    ## [43] "tissue"                                                   
+    ## [44] "cc_webresource"
+
 ## Columns
 
-By default, `query_uniprot()` returns a dataframe with UniProt accession
-IDs, gene names, organism and Swiss-Prot review status. You can choose
-which data columns to retrieve using the `columns` parameter.
+By default, `query_uniprot()` returns a data.frame with UniProt
+accession IDs, gene names, organism and Swiss-Prot review status. You
+can choose which data columns to retrieve using the `columns` parameter.
 
 ``` r
 df <- query_uniprot(query, 
@@ -62,10 +115,26 @@ df <- query_uniprot(query,
     ## Warning in (function (..., deparse.level = 1) : number of columns of result is
     ## not a multiple of vector length (arg 338)
 
-See this [web page](https://www.uniprot.org/help/return_fields) for all
-availbale UniProt data columns. Note that the parameter `columns` and
-the name of the corresponding column in the output data frame do not
-necessarily match.
+See the [API documentation](https://www.uniprot.org/help/return_fields)
+or the package data `return_fields` for all available columns. Available
+returned fields can be listed using the package data `return_fields`:
+
+``` r
+head(return_fields)
+```
+
+    ##          field                      label
+    ## 1    accession                      Entry
+    ## 2           id                 Entry name
+    ## 3   gene_names                 Gene names
+    ## 4 gene_primary       Gene names (primary)
+    ## 5 gene_synonym       Gene names (synonym)
+    ## 6     gene_oln Gene names (ordered locus)
+
+Note that the parameter `columns` and the name of the corresponding
+column in the output data frame do not necessarily match (they
+correspond to columns “field” and “label” respectively in the package
+data `return_fields`).
 
 ``` r
 names(df)
@@ -73,6 +142,9 @@ names(df)
 
     ## [1] "Entry"                "Entry Name"           "Sequence"            
     ## [4] "Keywords"             "Gene Names (primary)"
+
+Let’s check the sequence and the UniProt keywords corresponding to the
+first entry :
 
 ``` r
 as.character(df$Sequence[1])
@@ -140,7 +212,7 @@ query <- list("accession_id" = ids)
 query_uniprot(query)
 ```
 
-    ## 3 invalid values were found (REV_P47941, P226, CON_P22682) and removed from the query.
+    ## 3 invalid values were found (P226, REV_P47941, CON_P22682) and removed from the query.
 
     ##        Entry     Entry Name Gene Names Organism (ID)   Reviewed
     ## 2 A0A0U1ZFN5 A0A0U1ZFN5_RAT  Cbl c-Cbl         10116 unreviewed
@@ -181,8 +253,8 @@ head(df)
 
 ## Protein-protein interactions
 
-Another usage could be to retrieve protein-protein interactions amongst
-a set of UniProt entries:
+Another usage could be to retrieve protein-protein interactions among a
+set of UniProt entries:
 
 ``` r
 ids <- sample(uniprot_entries$Entry, 400)
@@ -192,17 +264,17 @@ df <- query_uniprot(query = query, columns = columns, show_progress = FALSE)
 head(df)
 ```
 
-    ##      Entry
-    ## 2   A2A259
-    ## 3   E9Q401
-    ## 4   O54943
-    ## 21  O08547
-    ## 22  O35526
-    ## 211 O88273
-    ##                                                                                             Interacts with
-    ## 2                                                                                           Q2EG98; A2A259
-    ## 3                                                                   Q6PHZ2; Q9Z2I2; Q8K4S1; E9Q401; P23327
-    ## 4   Q9WTL8; Q91VJ2; Q3TQ03; O08785; P97784; Q9R194; Q9JMK2; Q8C4V4; O35973; O54943; Q60953; Q8N365; P20393
-    ## 21                                                                                                  O35526
-    ## 22                                                                  O08547; P60879; P46097; P21707; Q62747
-    ## 211                                                                                                 O88273
+    ##     Entry
+    ## 2  O54943
+    ## 23 E9Q401
+    ## 22 O35235
+    ## 21 O35235
+    ## 3  O88273
+    ## 4  O88522
+    ##                                                                                            Interacts with
+    ## 2  Q9WTL8; Q91VJ2; Q3TQ03; O08785; P97784; Q9R194; Q9JMK2; Q8C4V4; O35973; O54943; Q60953; Q8N365; P20393
+    ## 23                                                                 Q6PHZ2; Q9Z2I2; Q8K4S1; E9Q401; P23327
+    ## 22                                                                                         O35305; O08712
+    ## 21                                                                                         O35305; O08712
+    ## 3                                                                                                  O88273
+    ## 4                                                  Q60680; O88351; O88522; Q924T7; P62991; P0CG48; P24772

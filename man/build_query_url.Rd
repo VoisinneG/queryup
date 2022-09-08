@@ -26,9 +26,3 @@ the query url
 \description{
 Accessory function used to build the query url
 }
-\examples{
-\dontrun{
-query <- list("accession_id" = c("CON_P22682", "P47941"))
-build_query_url(query)
-}
-}

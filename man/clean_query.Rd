@@ -21,10 +21,3 @@ the input query without the invalid values
 \description{
 Accessory function removing invalid values from a query
 }
-\examples{
- \dontrun{
-query <- list("accession_id" = c("CON_P22682", "P47941"))
-df <- data.frame(field = "accession_id", value = "CON_P22682")
-clean(query, df)
-}
-}
