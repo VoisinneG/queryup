@@ -16,7 +16,7 @@ usethis::use_data(return_fields, overwrite = TRUE)
 
 path <- "data-raw/UniProtKB_query_fields_UniProt_help_UniProt.html"
 tables <- XML::readHTMLTable(path, stringsAsFactors = FALSE)[[1]]
-tables <- tables[-c(1,2)]
+tables <- tables[-c(1, 2)]
 names(tables) <- tolower(gsub("rest.uniprot.org ", "", names(tables)))
 query_fields <- tables
 usethis::use_data(query_fields, overwrite = TRUE)
@@ -24,6 +24,6 @@ usethis::use_data(query_fields, overwrite = TRUE)
 #### uniprot_entries ####
 
 devtools::load_all()
-df <- query_uniprot(query = list("organism_id"="10090", "reviewed" = "true"))
+df <- query_uniprot(query = list("organism_id" = "10090", "reviewed" = "true"))
 uniprot_entries <- df[1:1000, ]
-usethis::use_data(uniprot_entries , overwrite = TRUE)
+usethis::use_data(uniprot_entries, overwrite = TRUE)

@@ -1,7 +1,7 @@
 R package: queryup
 ================
 Guillaume Voisinne
-2022 - 09 - 08
+2022 - 09 - 09
 
 [![R-CMD-check](https://github.com/VoisinneG/queryup/workflows/R-CMD-check/badge.svg)](https://github.com/VoisinneG/queryup/actions)
 [![Codecov test
@@ -167,7 +167,9 @@ Swiss-Prot reviewed protein entry encoded by gene *Pik3r1* in *Homo
 sapiens* (taxon: 9606):
 
 ``` r
-query <- list( "gene_exact" = "Pik3r1", "reviewed" = "true", "organism_id" = "9606" )
+query <- list("gene_exact" = "Pik3r1", 
+              "reviewed" = "true", 
+              "organism_id" = "9606")
 df <- query_uniprot(query, show_progress = FALSE)
 print(df)
 ```
@@ -184,7 +186,9 @@ reviewed proteins encoded by either *Pik3r1* or *Pik3r2* in either *Mus
 musculus* (taxon: 10090) or *Homo sapiens* (taxon: 9606):
 
 ``` r
-query <- list( "gene_exact" = c("Pik3r1", "Pik3r2"), "reviewed" = "true", "organism_id" = c("9606", "10090"))
+query <- list("gene_exact" = c("Pik3r1", "Pik3r2"), 
+              "reviewed" = "true", 
+              "organism_id" = c("9606", "10090"))
 df <- query_uniprot(query, show_progress = FALSE)
 print(df)
 ```
@@ -212,7 +216,7 @@ query <- list("accession_id" = ids)
 query_uniprot(query)
 ```
 
-    ## 3 invalid values were found (P226, REV_P47941, CON_P22682) and removed from the query.
+    ## 3 invalid values were found (REV_P47941, P226, CON_P22682) and removed from the query.
 
     ##        Entry     Entry Name Gene Names Organism (ID)   Reviewed
     ## 2 A0A0U1ZFN5 A0A0U1ZFN5_RAT  Cbl c-Cbl         10116 unreviewed
@@ -258,23 +262,17 @@ set of UniProt entries:
 
 ``` r
 ids <- sample(uniprot_entries$Entry, 400)
-query <- list("accession_id" = ids, "interactor"= ids)
+query <- list("accession_id" = ids, 
+              "interactor" = ids)
 columns <- "cc_interaction"
 df <- query_uniprot(query = query, columns = columns, show_progress = FALSE)
 head(df)
 ```
 
-    ##     Entry
-    ## 2  O54943
-    ## 23 E9Q401
-    ## 22 O35235
-    ## 21 O35235
-    ## 3  O88273
-    ## 4  O88522
-    ##                                                                                            Interacts with
-    ## 2  Q9WTL8; Q91VJ2; Q3TQ03; O08785; P97784; Q9R194; Q9JMK2; Q8C4V4; O35973; O54943; Q60953; Q8N365; P20393
-    ## 23                                                                 Q6PHZ2; Q9Z2I2; Q8K4S1; E9Q401; P23327
-    ## 22                                                                                         O35305; O08712
-    ## 21                                                                                         O35305; O08712
-    ## 3                                                                                                  O88273
-    ## 4                                                  Q60680; O88351; O88522; Q924T7; P62991; P0CG48; P24772
+    ##      Entry                         Interacts with
+    ## 2   E9Q401 Q6PHZ2; Q9Z2I2; Q8K4S1; E9Q401; P23327
+    ## 3   O08808         Q8BKX1; O08808; P46940; P61586
+    ## 4   O35681         Q9R0N4; O35681; Q9R0N8; Q9R0N9
+    ## 21  O08547                                 O35526
+    ## 22  A2A259                         Q2EG98; A2A259
+    ## 211 O35526 O08547; P60879; P46097; P21707; Q62747

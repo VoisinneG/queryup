@@ -30,13 +30,6 @@
 #' query <- list("gene_exact" = "Pik3r1")
 #' df <-  query_uniprot(query = query)
 #' head(df)
-#'
-#' # List protein interactions within a set of UniProt entries
-#' ids <- sample(uniprot_entries$Entry, 200)
-#' query <- list("accession_id" = ids, "interactor"= ids)
-#' columns = c("accession", "cc_interaction")
-#' res <- query_uniprot(query = query, columns = columns)
-#' res
 query_uniprot <- function(query = NULL,
                           columns = c("accession",
                                       "id",

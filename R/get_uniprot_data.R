@@ -11,7 +11,12 @@
 #' @param print_url Boolean. Prints the complete url used for the query.
 #' @param print_uniprot_messages Boolean. Prints the raw error message returned
 #' by UniProt.
-#' @return a data.frame
+#' @return a list with the following items :
+#' \describe{
+#'   \item{url}{the query url}
+#'   \item{messages}{messages returned by the REST API}
+#'   \item{content}{a data.frame containing the query results}
+#' }
 #' @importFrom RCurl getURL
 #' @importFrom jsonlite fromJSON
 #' @export
@@ -20,10 +25,9 @@
 #' #Getting gene names, keywords and protein sequences for a set of UniProt IDs.
 #' ids <- c("P22682", "P47941")
 #' cols <- c("accession", "id", "gene_names", "keyword", "sequence")
-#' df <- get_uniprot_data(query = list("accession_id" = ids), columns = cols)
-#'
-#' #Lists all entries describing interactions for entry P00520.
-#' df <- get_uniprot_data(query = list("interactor" = "P00520"), columns = cols)
+#' query = list("accession_id" = ids)
+#' df <- get_uniprot_data(query = query, columns = cols)$content
+#' df
 get_uniprot_data <- function(query = NULL,
                              columns = c("accession",
                                          "id",
@@ -159,7 +163,7 @@ build_query_url <- function(query = NULL,
 #' Accessory function retrieving invalid values from messages returned by
 #' the UniProt API.
 #'
-#' @param messages character string containg the error messages returned by
+#' @param messages character string containing the error messages returned by
 #' UniProt API
 #' @return a data.frame with invalid values (in column "value") and
 #' corresponding query field (in column "field"). NULL if no invalid values are

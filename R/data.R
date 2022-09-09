@@ -41,5 +41,3 @@
 #' }
 #' @source \url{https://www.uniprot.org/help/return_fields}
 "return_fields"
-
-

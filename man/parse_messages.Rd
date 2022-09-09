@@ -8,7 +8,7 @@ the UniProt API.}
 parse_messages(messages)
 }
 \arguments{
-\item{messages}{character string containg the error messages returned by
+\item{messages}{character string containing the error messages returned by
 UniProt API}
 }
 \value{

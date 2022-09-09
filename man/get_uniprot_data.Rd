@@ -28,7 +28,12 @@ See `return_fields` for available return fields.}
 by UniProt.}
 }
 \value{
-a data.frame
+a list with the following items :
+\describe{
+  \item{url}{the query url}
+  \item{messages}{messages returned by the REST API}
+  \item{content}{a data.frame containing the query results}
+}
 }
 \description{
 Retrieve data from UniProt using UniProt's REST API
@@ -37,8 +42,7 @@ Retrieve data from UniProt using UniProt's REST API
 #Getting gene names, keywords and protein sequences for a set of UniProt IDs.
 ids <- c("P22682", "P47941")
 cols <- c("accession", "id", "gene_names", "keyword", "sequence")
-df <- get_uniprot_data(query = list("accession_id" = ids), columns = cols)
-
-#Lists all entries describing interactions for entry P00520.
-df <- get_uniprot_data(query = list("interactor" = "P00520"), columns = cols)
+query = list("accession_id" = ids)
+df <- get_uniprot_data(query = query, columns = cols)$content
+df
 }

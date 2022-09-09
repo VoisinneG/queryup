@@ -1,33 +1,26 @@
 ---
-title: "R package: queryup"
-author: "Guillaume Voisinne"
-output: 
-  github_document :
-    html_preview: true
-date: "`r format(Sys.time(), '%Y - %m - %d')`"
+title: "Introduction to queryup"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to queryup}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
-```{r include=FALSE}
-library(knitr)
-knitr::opts_chunk$set(echo = TRUE)
-devtools::load_all()
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
 ```
 
-[![R-CMD-check](https://github.com/VoisinneG/queryup/workflows/R-CMD-check/badge.svg)](https://github.com/VoisinneG/queryup/actions)
-[![Codecov test coverage](https://codecov.io/gh/VoisinneG/queryup/branch/master/graph/badge.svg)](https://app.codecov.io/gh/VoisinneG/queryup?branch=master)
-
-
-The `queryup` R package aims to facilitate retrieving information from the UniProt database using R.
-Programmatic access to the UniProt database is performed by submitting queries to the [UniProt website REST API](https://www.uniprot.org/help/api_queries).
-
-## Install
-
-Install the package from github using devtools:
-
-```{r eval=FALSE, message=FALSE, warnings=FALSE}
-devtools::install_github("VoisinneG/queryup")
+```{r setup}
 library(queryup)
 ```
+
+
+The purpose of `queryup` is to retrieve protein information using queries to the [UniProtKB REST API](https://www.uniprot.org/help/api_queries).
+
 
 ## Queries
 Queries combine different fields to identify matching database entries. Here, queries are submitted using the function `query_uniprot()`. In the `queryup` R package, a query must be formatted as a list containing character vectors named after existing UniProt fields (available query fields can be found in the [API documentation](https://www.uniprot.org/help/query-fields) or in the package data `query_fields$field`). Different query fields must be matched simultaneously. For instance, the following query uses the fields *gene_exact* to return the UniProt entries of all proteins encoded by gene *Pik3r1* :
