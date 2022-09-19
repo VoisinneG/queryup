@@ -1,11 +1,14 @@
 R package: queryup
 ================
 Guillaume Voisinne
-2022 - 09 - 09
+2022 - 09 - 19
 
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/queryup)](https://cran.r-project.org/package=queryup)
 [![R-CMD-check](https://github.com/VoisinneG/queryup/workflows/R-CMD-check/badge.svg)](https://github.com/VoisinneG/queryup/actions)
 [![Codecov test
 coverage](https://codecov.io/gh/VoisinneG/queryup/branch/master/graph/badge.svg)](https://app.codecov.io/gh/VoisinneG/queryup?branch=master)
+[![CRAN mirror
+downloads](https://cranlogs.r-pkg.org/badges/queryup)](https://cran.r-project.org/package=queryup/)
 
 The `queryup` R package aims to facilitate retrieving information from
 the UniProt database using R. Programmatic access to the UniProt
@@ -216,7 +219,7 @@ query <- list("accession_id" = ids)
 query_uniprot(query)
 ```
 
-    ## 3 invalid values were found (REV_P47941, P226, CON_P22682) and removed from the query.
+    ## 3 invalid values were found (CON_P22682, P226, REV_P47941) and removed from the query.
 
     ##        Entry     Entry Name Gene Names Organism (ID)   Reviewed
     ## 2 A0A0U1ZFN5 A0A0U1ZFN5_RAT  Cbl c-Cbl         10116 unreviewed
@@ -269,10 +272,17 @@ df <- query_uniprot(query = query, columns = columns, show_progress = FALSE)
 head(df)
 ```
 
-    ##      Entry                         Interacts with
-    ## 2   E9Q401 Q6PHZ2; Q9Z2I2; Q8K4S1; E9Q401; P23327
-    ## 3   O08808         Q8BKX1; O08808; P46940; P61586
-    ## 4   O35681         Q9R0N4; O35681; Q9R0N8; Q9R0N9
-    ## 21  O08547                                 O35526
-    ## 22  A2A259                         Q2EG98; A2A259
-    ## 211 O35526 O08547; P60879; P46097; P21707; Q62747
+    ##      Entry
+    ## 2   E9Q401
+    ## 21  O35253
+    ## 22  B2RR83
+    ## 24  O35625
+    ## 212 A2A259
+    ## 3   O35182
+    ##                                                                                                     Interacts with
+    ## 2                                                                           Q6PHZ2; Q9Z2I2; Q8K4S1; E9Q401; P23327
+    ## 21                                                                                          O35625; Q923E4; Q9C0C9
+    ## 22                                                                                                          A2AG06
+    ## 24  P98078; Q61062; P62137; Q99ML9; Q8BUN5; O35182; O35253; Q9EPK5; P35222; P49841; O75581; Q15583; O95271; P46937
+    ## 212                                                                                                 Q2EG98; A2A259
+    ## 3                                                                                   O35625; P36898; Q9JIF0; Q9C0C9

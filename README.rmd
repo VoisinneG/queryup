@@ -13,9 +13,10 @@ knitr::opts_chunk$set(echo = TRUE)
 devtools::load_all()
 ```
 
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/queryup)](https://cran.r-project.org/package=queryup)
 [![R-CMD-check](https://github.com/VoisinneG/queryup/workflows/R-CMD-check/badge.svg)](https://github.com/VoisinneG/queryup/actions)
 [![Codecov test coverage](https://codecov.io/gh/VoisinneG/queryup/branch/master/graph/badge.svg)](https://app.codecov.io/gh/VoisinneG/queryup?branch=master)
-
+[![CRAN mirror downloads](https://cranlogs.r-pkg.org/badges/queryup)](https://cran.r-project.org/package=queryup/)
 
 The `queryup` R package aims to facilitate retrieving information from the UniProt database using R.
 Programmatic access to the UniProt database is performed by submitting queries to the [UniProt website REST API](https://www.uniprot.org/help/api_queries).
