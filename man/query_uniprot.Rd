@@ -9,7 +9,7 @@ query_uniprot(
   columns = c("accession", "id", "gene_names", "organism_id", "reviewed"),
   print_url = FALSE,
   print_uniprot_messages = FALSE,
-  max_keys = 300,
+  max_keys = 200,
   updateProgress = NULL,
   show_progress = TRUE
 )

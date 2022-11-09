@@ -88,8 +88,10 @@ test_that("Query with valid and invalid values work", {
     TRUE)
 })
 
-test_that("Long queries fail with a warning", {
+test_that("Long queries work", {
   ids <- uniprot_entries$Entry
   query <- list("accession_id" = ids)
-  expect_warning(get_uniprot_data(query), "request failed")
+  expect_equal(
+    setequal(get_uniprot_data(query)$content$Entry, ids),
+    TRUE)
 })

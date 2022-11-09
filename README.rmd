@@ -23,16 +23,22 @@ Programmatic access to the UniProt database is performed by submitting queries t
 
 ## Install
 
-Install the package from github using devtools:
+You can install the package from CRAN using:
+```{r eval=FALSE, message=FALSE, warnings=FALSE}
+install.packages("queryup")
+```
 
+Alternatively, you may also install the package from github using devtools:
 ```{r eval=FALSE, message=FALSE, warnings=FALSE}
 devtools::install_github("VoisinneG/queryup")
-library(queryup)
 ```
 
 ## Queries
 Queries combine different fields to identify matching database entries. Here, queries are submitted using the function `query_uniprot()`. In the `queryup` R package, a query must be formatted as a list containing character vectors named after existing UniProt fields (available query fields can be found in the [API documentation](https://www.uniprot.org/help/query-fields) or in the package data `query_fields$field`). Different query fields must be matched simultaneously. For instance, the following query uses the fields *gene_exact* to return the UniProt entries of all proteins encoded by gene *Pik3r1* :
 
+```{r eval=FALSE, message=FALSE, warnings=FALSE}
+library(queryup)
+```
 
 
 ```{r message=FALSE, warnings=FALSE}

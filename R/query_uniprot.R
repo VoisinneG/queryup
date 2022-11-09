@@ -38,12 +38,13 @@ query_uniprot <- function(query = NULL,
                                       "reviewed"),
                           print_url = FALSE,
                           print_uniprot_messages = FALSE,
-                          max_keys = 300,
+                          max_keys = 200,
                           updateProgress = NULL,
                           show_progress = TRUE) {
 
   if (max_keys > 300) {
-    stop("Parameter 'max_keys' should not exceed 300.")
+    warning("Parameter 'max_keys' exceeds 300.
+            Try a lower value if the request fails.")
   }
 
   n_max <- max_keys / length(query)

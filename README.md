@@ -1,7 +1,7 @@
 R package: queryup
 ================
 Guillaume Voisinne
-2022 - 09 - 19
+2022 - 11 - 09
 
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/queryup)](https://cran.r-project.org/package=queryup)
 [![R-CMD-check](https://github.com/VoisinneG/queryup/workflows/R-CMD-check/badge.svg)](https://github.com/VoisinneG/queryup/actions)
@@ -17,11 +17,17 @@ API](https://www.uniprot.org/help/api_queries).
 
 ## Install
 
-Install the package from github using devtools:
+You can install the package from CRAN using:
+
+``` r
+install.packages("queryup")
+```
+
+Alternatively, you may also install the package from github using
+devtools:
 
 ``` r
 devtools::install_github("VoisinneG/queryup")
-library(queryup)
 ```
 
 ## Queries
@@ -36,6 +42,10 @@ package data `query_fields$field`). Different query fields must be
 matched simultaneously. For instance, the following query uses the
 fields *gene_exact* to return the UniProt entries of all proteins
 encoded by gene *Pik3r1* :
+
+``` r
+library(queryup)
+```
 
 ``` r
 query <- list("gene_exact" = "Pik3r1")
@@ -116,7 +126,7 @@ df <- query_uniprot(query,
 ```
 
     ## Warning in (function (..., deparse.level = 1) : number of columns of result is
-    ## not a multiple of vector length (arg 338)
+    ## not a multiple of vector length (arg 325)
 
 See the [API documentation](https://www.uniprot.org/help/return_fields)
 or the package data `return_fields` for all available columns. Available
@@ -159,7 +169,7 @@ as.character(df$Sequence[1])
 as.character(df$Keywords[1])
 ```
 
-    ## [1] "Coiled coil;Reference proteome;Repeat;SH2 domain;SH3 domain;Stress response"
+    ## [1] "Coiled coil;Protein transport;Reference proteome;Repeat;SH2 domain;SH3 domain;Stress response;Transport"
 
 ## Combining query fields
 
@@ -219,7 +229,7 @@ query <- list("accession_id" = ids)
 query_uniprot(query)
 ```
 
-    ## 3 invalid values were found (CON_P22682, P226, REV_P47941) and removed from the query.
+    ## 3 invalid values were found (REV_P47941, P226, CON_P22682) and removed from the query.
 
     ##        Entry     Entry Name Gene Names Organism (ID)   Reviewed
     ## 2 A0A0U1ZFN5 A0A0U1ZFN5_RAT  Cbl c-Cbl         10116 unreviewed
@@ -272,17 +282,17 @@ df <- query_uniprot(query = query, columns = columns, show_progress = FALSE)
 head(df)
 ```
 
-    ##      Entry
-    ## 2   E9Q401
-    ## 21  O35253
-    ## 22  B2RR83
-    ## 24  O35625
-    ## 212 A2A259
-    ## 3   O35182
-    ##                                                                                                     Interacts with
-    ## 2                                                                           Q6PHZ2; Q9Z2I2; Q8K4S1; E9Q401; P23327
-    ## 21                                                                                          O35625; Q923E4; Q9C0C9
-    ## 22                                                                                                          A2AG06
-    ## 24  P98078; Q61062; P62137; Q99ML9; Q8BUN5; O35182; O35253; Q9EPK5; P35222; P49841; O75581; Q15583; O95271; P46937
-    ## 212                                                                                                 Q2EG98; A2A259
-    ## 3                                                                                   O35625; P36898; Q9JIF0; Q9C0C9
+    ##     Entry
+    ## 2  O88273
+    ## 21 O08547
+    ## 23 O35182
+    ## 3  O35253
+    ## 4  O35625
+    ## 22 O35526
+    ##                                                                                                    Interacts with
+    ## 2                                                                                                          O88273
+    ## 21                                                                                                         O35526
+    ## 23                                                                                 O35625; P36898; Q9JIF0; Q9C0C9
+    ## 3                                                                                          O35625; Q923E4; Q9C0C9
+    ## 4  P98078; Q61062; P62137; Q99ML9; Q8BUN5; O35182; O35253; Q9EPK5; P35222; P49841; O75581; Q15583; O95271; P46937
+    ## 22                                                                         O08547; P60879; P46097; P21707; Q62747

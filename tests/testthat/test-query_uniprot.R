@@ -23,8 +23,8 @@ test_that("Short queries work", {
   expect_equal(setequal(res[["Entry"]], ids), TRUE)
 })
 
-test_that("Setting 'max_keys' above 300 fails", {
-  expect_error(query_uniprot("P22682", max_keys = 301), "300")
+test_that("Setting 'max_keys' above 300 produces a warning", {
+  expect_warning(query_uniprot("P22682", max_keys = 301), "300")
 })
 
 test_that("Query works when multiple fields have more than 'max_keys' items", {
