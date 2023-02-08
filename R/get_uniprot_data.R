@@ -202,7 +202,7 @@ parse_messages <- function(messages) {
 
 #' Accessory function removing invalid values from a query
 #'
-#' @param query list of keys corresponding to uniprot's query fields.
+#' @param query list of keys corresponding to UniProt's query fields.
 #' For example :
 #' list("gene_exact" = c("Pik3r1", "Pik3r2") ,
 #' "organism" = c("10090", "9606"), "reviewed" = "yes")
