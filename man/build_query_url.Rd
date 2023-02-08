@@ -6,6 +6,7 @@
 \usage{
 build_query_url(
   query = NULL,
+  base_url = "https://rest.uniprot.org/uniprotkb/",
   columns = c("accession", "id", "gene_names", "organism_name", "reviewed"),
   format = "json"
 )
@@ -15,6 +16,8 @@ build_query_url(
 For example :
 list("gene_exact" = c("Pik3r1", "Pik3r2") ,
 "organism" = c("10090", "9606"), "reviewed" = "yes")}
+
+\item{base_url}{The base url for the UniProt REST API}
 
 \item{columns}{names of UniProt data columns to retrieve.}
 

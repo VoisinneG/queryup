@@ -1,7 +1,7 @@
 R package: queryup
 ================
 Guillaume Voisinne
-2022 - 11 - 09
+2023 - 02 - 08
 
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/queryup)](https://cran.r-project.org/package=queryup)
 [![R-CMD-check](https://github.com/VoisinneG/queryup/workflows/R-CMD-check/badge.svg)](https://github.com/VoisinneG/queryup/actions)
@@ -126,7 +126,7 @@ df <- query_uniprot(query,
 ```
 
     ## Warning in (function (..., deparse.level = 1) : number of columns of result is
-    ## not a multiple of vector length (arg 325)
+    ## not a multiple of vector length (arg 881)
 
 See the [API documentation](https://www.uniprot.org/help/return_fields)
 or the package data `return_fields` for all available columns. Available
@@ -229,7 +229,7 @@ query <- list("accession_id" = ids)
 query_uniprot(query)
 ```
 
-    ## 3 invalid values were found (REV_P47941, P226, CON_P22682) and removed from the query.
+    ## 3 invalid values were found (P226, CON_P22682, REV_P47941) and removed from the query.
 
     ##        Entry     Entry Name Gene Names Organism (ID)   Reviewed
     ## 2 A0A0U1ZFN5 A0A0U1ZFN5_RAT  Cbl c-Cbl         10116 unreviewed
@@ -282,17 +282,8 @@ df <- query_uniprot(query = query, columns = columns, show_progress = FALSE)
 head(df)
 ```
 
-    ##     Entry
-    ## 2  O88273
-    ## 21 O08547
-    ## 23 O35182
-    ## 3  O35253
-    ## 4  O35625
-    ## 22 O35526
-    ##                                                                                                    Interacts with
-    ## 2                                                                                                          O88273
-    ## 21                                                                                                         O35526
-    ## 23                                                                                 O35625; P36898; Q9JIF0; Q9C0C9
-    ## 3                                                                                          O35625; Q923E4; Q9C0C9
-    ## 4  P98078; Q61062; P62137; Q99ML9; Q8BUN5; O35182; O35253; Q9EPK5; P35222; P49841; O75581; Q15583; O95271; P46937
-    ## 22                                                                         O08547; P60879; P46097; P21707; Q62747
+    ##     Entry                                         Interacts with
+    ## 2  A2A259                                         Q2EG98; A2A259
+    ## 3  O88273                                                 O88273
+    ## 4  O88522 Q60680; O88351; O88522; Q924T7; P62991; P0CG48; P24772
+    ## 21 E9Q401                 Q6PHZ2; Q9Z2I2; Q8K4S1; E9Q401; P23327

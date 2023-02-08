@@ -1,7 +1,7 @@
 Type: Package
 Package: queryup
 Title: Query the 'UniProtKB' REST API
-Version: 1.0.1
+Version: 1.0.2
 Authors@R: 
     person("Guillaume", "Voisinne", , "voisinne@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-3922-2121"))
@@ -14,12 +14,12 @@ BugReports: https://github.com/VoisinneG/queryup/issues
 Depends: 
     R (>= 2.10)
 Imports:
-    jsonlite,
-    RCurl,
+    httr,
     utils
 Suggests:
     covr,
     knitr,
+    xml2,
     rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

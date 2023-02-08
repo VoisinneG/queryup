@@ -6,9 +6,8 @@
 \usage{
 get_uniprot_data(
   query = NULL,
-  columns = c("accession", "id", "gene_names", "organism_id", "reviewed"),
-  print_url = FALSE,
-  print_uniprot_messages = FALSE
+  base_url = "https://rest.uniprot.org/uniprotkb/",
+  columns = c("accession", "id", "gene_names", "organism_id", "reviewed")
 )
 }
 \arguments{
@@ -18,19 +17,17 @@ list("gene_exact" = c("Pik3r1", "Pik3r2") ,
 "organism" = c("10090", "9606"), "reviewed" = "yes").
 See `query_fields` for available query fields.}
 
+\item{base_url}{The base url for the UniProt REST API}
+
 \item{columns}{names of UniProt data columns to retrieve.
 Examples include "accession", "id", "gene_names", "keyword", "sequence".
 See `return_fields` for available return fields.}
-
-\item{print_url}{Boolean. Prints the complete url used for the query.}
-
-\item{print_uniprot_messages}{Boolean. Prints the raw error message returned
-by UniProt.}
 }
 \value{
 a list with the following items :
 \describe{
   \item{url}{the query url}
+  \item{status}{the http status code for the request}
   \item{messages}{messages returned by the REST API}
   \item{content}{a data.frame containing the query results}
 }

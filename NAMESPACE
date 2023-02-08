@@ -2,7 +2,6 @@
 
 export(get_uniprot_data)
 export(query_uniprot)
-importFrom(RCurl,getURL)
-importFrom(jsonlite,fromJSON)
+import(httr)
 importFrom(utils,setTxtProgressBar)
 importFrom(utils,txtProgressBar)

@@ -5,20 +5,18 @@
 #' list("gene_exact" = c("Pik3r1", "Pik3r2") ,
 #' "organism" = c("10090", "9606"), "reviewed" = "yes").
 #' See `query_fields` for available query fields.
+#' @param base_url The base url for the UniProt REST API
 #' @param columns names of UniProt data columns to retrieve.
 #' Examples include "accession", "id", "gene_names", "keyword", "sequence".
 #' See `return_fields` for available return fields.
-#' @param print_url Boolean. Prints the complete url used for the query.
-#' @param print_uniprot_messages Boolean. Prints the raw error message returned
-#' by UniProt.
 #' @return a list with the following items :
 #' \describe{
 #'   \item{url}{the query url}
+#'   \item{status}{the http status code for the request}
 #'   \item{messages}{messages returned by the REST API}
 #'   \item{content}{a data.frame containing the query results}
 #' }
-#' @importFrom RCurl getURL
-#' @importFrom jsonlite fromJSON
+#' @import httr
 #' @export
 #'
 #' @examples
@@ -29,28 +27,24 @@
 #' df <- get_uniprot_data(query = query, columns = cols)$content
 #' df
 get_uniprot_data <- function(query = NULL,
+                             base_url = "https://rest.uniprot.org/uniprotkb/",
                              columns = c("accession",
                                          "id",
                                          "gene_names",
                                          "organism_id",
-                                         "reviewed"),
-                             print_url = FALSE,
-                             print_uniprot_messages = FALSE) {
+                                         "reviewed")) {
 
-  full_url <- build_query_url(query = query, columns = columns)
+  full_url <- build_query_url(query = query,
+                              base_url = base_url,
+                              columns = columns)
+
   if (is.null(full_url)) return(NULL)
 
-  if (print_url) {
-    message(paste0("\nQuery URL:\n",  full_url))
-  }
+  # GET response to request
 
-  # Get response for query with json format
-  content <- jsonlite::fromJSON(RCurl::getURL(full_url))
-  messages <- content$messages
-
-  if (print_uniprot_messages) {
-    message(paste(messages, "\n"))
-  }
+  resp <- httr::GET(full_url)
+  content <- httr::content(resp, encoding = "UTF-8")
+  messages <- unlist(content$messages)
 
   # check for invalid values and retry query without them
   df_invalid <- parse_messages(messages)
@@ -58,38 +52,54 @@ get_uniprot_data <- function(query = NULL,
   if (!is.null(df_invalid)) {
     query <- clean_query(query, df_invalid)
     return(get_uniprot_data(query = query,
-                            columns = columns,
-                            print_url = print_url,
-                            print_uniprot_messages = print_uniprot_messages))
+                            base_url = base_url,
+                            columns = columns))
   }
 
-  # abort if an error message is present
-  if (!is.null(messages)) {
+  request_status <- httr::http_status(resp)
+  request_status_code <- httr::status_code(resp)
 
-    extra_message <- NULL
-    n_query_items <- length(unlist(query))
-    if (n_query_items > 300) {
-      extra_message <- sprintf(
-        "\nQuery has %s items and is probably too long.\n",
-        n_query_items)
-    }
+  # request failure
 
-    warning(
-      paste0(
-        "\nUniProt API request failed : \n",
-        paste(messages, collapse = "\n"),
-        extra_message
-      ),
-      call. = FALSE
-    )
+  if(request_status_code != 200){
 
-    return(list(url = full_url, messages = messages, content = NULL))
+    # get message corresponding to request status
+    http_message <- request_status$message
+
+    # print an additional informative error message
+
+      extra_message <- NULL
+      n_query_items <- length(unlist(query))
+      if (n_query_items > 200) {
+        extra_message <- sprintf(
+          "\nQuery has %s items and is probably too long.\n",
+          n_query_items)
+      }
+
+      message(
+        paste0(
+          "\nUniProt API request failed : \n",
+          paste(c(http_message, messages), collapse = "\n"),
+          extra_message
+        )
+      )
+
+    return(list(url = full_url,
+                status = request_status_code,
+                messages = c(http_message, messages),
+                content = NULL))
   }
 
   # get query results and return them as a data.frame
 
-  full_url <- build_query_url(query = query, columns = columns, format = "tsv")
-  res <- RCurl::getURL(full_url)
+  full_url <- build_query_url(query = query,
+                              base_url = base_url,
+                              columns = columns,
+                              format = "tsv")
+
+  resp <- httr::GET(full_url)
+  res <- httr::content(resp, encoding = "UTF-8")
+
   entries <- strsplit(res, split = "\n")[[1]]
   df <- as.data.frame(do.call(rbind,
                               lapply(entries,
@@ -100,7 +110,10 @@ get_uniprot_data <- function(query = NULL,
   df <- as.data.frame(df[-1, ])
   names(df) <- names
 
-  return(list(url = full_url, messages = messages, content = df))
+  return(list(url = full_url,
+              status = request_status_code,
+              messages = messages,
+              content = df))
 
 }
 
@@ -111,10 +124,12 @@ get_uniprot_data <- function(query = NULL,
 #' For example :
 #' list("gene_exact" = c("Pik3r1", "Pik3r2") ,
 #' "organism" = c("10090", "9606"), "reviewed" = "yes")
+#' @param base_url The base url for the UniProt REST API
 #' @param columns names of UniProt data columns to retrieve.
 #' @param format format of the response provided by the UniProt API
 #' @return the query url
 build_query_url <- function(query = NULL,
+                            base_url = "https://rest.uniprot.org/uniprotkb/",
                             columns = c("accession",
                                         "id",
                                         "gene_names",
@@ -145,8 +160,6 @@ build_query_url <- function(query = NULL,
   }
 
   cols <- paste(columns, collapse = ",")
-
-  base_url <- "https://rest.uniprot.org/uniprotkb/"
 
   full_url <- paste(base_url,
                     "stream?query=",

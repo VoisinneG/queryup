@@ -12,12 +12,10 @@
 #' query = list("gene_exact" = c("Pik3r1", "Pik3r2"),
 #' "organism_id" = c("10090", "9606"), "reviewed" = "true").
 #' See `query_fields` for available query fields.
+#' @param base_url The base url for the UniProt REST API
 #' @param columns names of UniProt data columns to retrieve.
 #' Examples include "accession", "id", "genes", "keywords", "sequence".
 #' See `return_fields` for available return fields.
-#' @param print_url logical. Prints the complete url used for the query.
-#' @param print_uniprot_messages Boolean. Prints the raw error message returned
-#' by UniProt.
 #' @param max_keys maximum number of field items submitted
 #' @param updateProgress used to display progress in shiny apps
 #' @param show_progress Show progress bar
@@ -31,19 +29,18 @@
 #' df <-  query_uniprot(query = query)
 #' head(df)
 query_uniprot <- function(query = NULL,
+                          base_url = "https://rest.uniprot.org/uniprotkb/",
                           columns = c("accession",
                                       "id",
                                       "gene_names",
                                       "organism_id",
                                       "reviewed"),
-                          print_url = FALSE,
-                          print_uniprot_messages = FALSE,
                           max_keys = 200,
                           updateProgress = NULL,
                           show_progress = TRUE) {
 
-  if (max_keys > 300) {
-    warning("Parameter 'max_keys' exceeds 300.
+  if (max_keys > 200) {
+    warning("Parameter 'max_keys' exceeds 200.
             Try a lower value if the request fails.")
   }
 
@@ -81,10 +78,8 @@ query_uniprot <- function(query = NULL,
         }
 
         df_list[[i]] <- get_uniprot_data(query = query_short,
-                                         columns = columns,
-                                         print_url = print_url,
-                                         print_uniprot_messages =
-                                           print_uniprot_messages)$content
+                                         base_url = base_url,
+                                         columns = columns)$content
 
         if (show_progress) utils::setTxtProgressBar(pb, i)
       }
@@ -105,9 +100,8 @@ query_uniprot <- function(query = NULL,
         query_split[[2]][[i]] <- query[[i]][(n_max + 1):length(query[[i]])]
 
         df_list <- lapply(query_split, query_uniprot,
+                          base_url = base_url,
                           columns = columns,
-                          print_url = print_url,
-                          print_uniprot_messages = print_uniprot_messages,
                           max_keys = max_keys,
                           show_progress = show_progress)
 
@@ -117,8 +111,10 @@ query_uniprot <- function(query = NULL,
 
   }
 
-  return(get_uniprot_data(query = query,
-                          columns = columns,
-                          print_url = print_url)$content)
+  res <- get_uniprot_data(query = query,
+                          base_url = base_url,
+                          columns = columns)
+
+  return(res$content)
 
 }
