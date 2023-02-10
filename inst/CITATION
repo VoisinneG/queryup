@@ -1,9 +1,10 @@
 citHeader("To cite queryup in publications, please use:")
 
-citEntry(entry = "Manual",
-  author = "Guillaume Voisinne",
-  title = "queryup: Query the UniProt REST API using R",
-  year = "2019",
-  url = "https://github.com/VoisinneG/queryup/",
-  textVersion = "G Voisinne. queryup: Query the UniProt REST API using R, 2019."
-)
+bibentry(
+   bibtype = "Manual",
+   title = "queryup: Query the UniProt REST API using R",
+   author = person("Guillaume", "Voisinne", role = "aut"),
+   organization = "Centre d'Immunologie de Marseille-Luminy, Aix Marseille Université, INSERM, CNRS, Marseille, France",
+   year = "2019",
+   url = "https://github.com/VoisinneG/queryup/",
+   textVersion = "G Voisinne. queryup: Query the UniProt REST API using R, 2019.")
