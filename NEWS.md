@@ -1,3 +1,7 @@
+# queryup 1.0.3
+
+* Better handling of possible errors when using `httr::GET()`
+
 # queryup 1.0.2
 
 * Package dependencies on `RCurl` and `jsonlite` packages have been replaced 

@@ -54,9 +54,9 @@ test_that("Query with incorrect base url fails with a message", {
   existing_ids <- c("P22682", "P47941")
   query <- list("accession_id" = existing_ids)
   res <- get_uniprot_data(query, base_url = "https://rest.uniprot.org/uni/")
-  expect_true(res$status != 200)
-  expect_true(length(res$messages) > 0)
   expect_equal(res$content, NULL)
+  expect_message(get_uniprot_data(query,
+                                  base_url = "https://rest.uniprot.org/uni/"))
 })
 
 

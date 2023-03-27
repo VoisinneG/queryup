@@ -38,11 +38,17 @@ get_uniprot_data <- function(query = NULL,
                               base_url = base_url,
                               columns = columns)
 
-  if (is.null(full_url)) return(NULL)
+  #if (is.null(full_url)) return(NULL)
 
   # GET response to request
 
-  resp <- httr::GET(full_url)
+  resp <- try(httr::GET(full_url), silent = TRUE)
+
+  if (inherits(resp, "try-error")){
+    message(paste0("Request failed : ", resp[1]))
+    return(NULL)
+  }
+
   content <- httr::content(resp, encoding = "UTF-8")
   messages <- unlist(content$messages)
 
@@ -97,7 +103,13 @@ get_uniprot_data <- function(query = NULL,
                               columns = columns,
                               format = "tsv")
 
-  resp <- httr::GET(full_url)
+  resp <- try(httr::GET(full_url), silent = TRUE)
+
+  if (inherits(resp, "try-error")){
+    message(paste0("Request failed : ", resp[1]))
+    return(NULL)
+  }
+
   res <- httr::content(resp, encoding = "UTF-8")
 
   entries <- strsplit(res, split = "\n")[[1]]
