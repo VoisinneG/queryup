@@ -1,3 +1,7 @@
+# queryup 1.0.4
+
+* Handling of possible errors when using `httr::content()`
+
 # queryup 1.0.3
 
 * Better handling of possible errors when using `httr::GET()`

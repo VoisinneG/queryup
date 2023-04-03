@@ -40,7 +40,7 @@ query_uniprot <- function(query = NULL,
                           show_progress = TRUE) {
 
   if (max_keys > 200) {
-    warning("Parameter 'max_keys' exceeds 200.
+    message("Parameter 'max_keys' exceeds 200.
             Try a lower value if the request fails.")
   }
 
@@ -77,9 +77,11 @@ query_uniprot <- function(query = NULL,
                          detail = text)
         }
 
-        df_list[[i]] <- get_uniprot_data(query = query_short,
-                                         base_url = base_url,
-                                         columns = columns)$content
+        res <- get_uniprot_data(query = query_short,
+                         base_url = base_url,
+                         columns = columns)
+
+        df_list[[i]] <- res$content
 
         if (show_progress) utils::setTxtProgressBar(pb, i)
       }

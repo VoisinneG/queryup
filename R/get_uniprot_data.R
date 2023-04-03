@@ -38,18 +38,24 @@ get_uniprot_data <- function(query = NULL,
                               base_url = base_url,
                               columns = columns)
 
-  #if (is.null(full_url)) return(NULL)
+  if (is.null(full_url)) return(NULL)
 
   # GET response to request
 
   resp <- try(httr::GET(full_url), silent = TRUE)
 
   if (inherits(resp, "try-error")){
-    message(paste0("Request failed : ", resp[1]))
+    message(paste0("Request failed : could not get a response \n(",
+                   resp[1], ")"))
     return(NULL)
   }
 
-  content <- httr::content(resp, encoding = "UTF-8")
+  content <- try(httr::content(resp, encoding = "UTF-8"), silent = TRUE)
+  if (inherits(content, "try-error")){
+    message("Request failed : could not read the response content")
+    return(NULL)
+  }
+
   messages <- unlist(content$messages)
 
   # check for invalid values and retry query without them
@@ -106,11 +112,18 @@ get_uniprot_data <- function(query = NULL,
   resp <- try(httr::GET(full_url), silent = TRUE)
 
   if (inherits(resp, "try-error")){
-    message(paste0("Request failed : ", resp[1]))
+    message(paste0("Request failed : could not get a response \n(",
+                   resp[1], ")"))
+    #message(paste0("Request failed : ", resp[1]))
     return(NULL)
   }
 
-  res <- httr::content(resp, encoding = "UTF-8")
+  res <- try(httr::content(resp, encoding = "UTF-8"), silent = TRUE)
+
+  if (!inherits(res, "character")){
+    message("Request failed : could not read the response content")
+    return(NULL)
+  }
 
   entries <- strsplit(res, split = "\n")[[1]]
   df <- as.data.frame(do.call(rbind,

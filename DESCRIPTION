@@ -1,7 +1,7 @@
 Type: Package
 Package: queryup
 Title: Query the 'UniProtKB' REST API
-Version: 1.0.3
+Version: 1.0.4
 Authors@R: 
     person("Guillaume", "Voisinne", , "voisinne@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-3922-2121"))
