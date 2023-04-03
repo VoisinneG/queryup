@@ -3,5 +3,6 @@
 export(get_uniprot_data)
 export(query_uniprot)
 import(httr)
+importFrom(jsonlite,fromJSON)
 importFrom(utils,setTxtProgressBar)
 importFrom(utils,txtProgressBar)

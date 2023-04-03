@@ -15,6 +15,7 @@ Depends:
     R (>= 2.10)
 Imports:
     httr,
+    jsonlite,
     utils
 Suggests:
     covr,

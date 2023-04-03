@@ -17,6 +17,7 @@
 #'   \item{content}{a data.frame containing the query results}
 #' }
 #' @import httr
+#' @importFrom jsonlite fromJSON
 #' @export
 #'
 #' @examples
@@ -36,7 +37,8 @@ get_uniprot_data <- function(query = NULL,
 
   full_url <- build_query_url(query = query,
                               base_url = base_url,
-                              columns = columns)
+                              columns = columns,
+                              format = "json")
 
   if (is.null(full_url)) return(NULL)
 
@@ -50,13 +52,22 @@ get_uniprot_data <- function(query = NULL,
     return(NULL)
   }
 
-  content <- try(httr::content(resp, encoding = "UTF-8"), silent = TRUE)
-  if (inherits(content, "try-error")){
-    message("Request failed : could not read the response content")
+  if (http_type(resp) != "application/json") {
+    message("Request failed : API did not return json", call. = FALSE)
     return(NULL)
   }
 
-  messages <- unlist(content$messages)
+  content <- jsonlite::fromJSON(content(resp,
+                                        as = "text",
+                                        encoding = "UTF-8"),
+                                simplifyVector = FALSE)
+
+  messages <- try(unlist(content$messages), silent = TRUE)
+
+  if (inherits(messages, "try-error")){
+    message("Request failed : could not read the response content")
+    return(NULL)
+  }
 
   # check for invalid values and retry query without them
   df_invalid <- parse_messages(messages)
@@ -114,11 +125,18 @@ get_uniprot_data <- function(query = NULL,
   if (inherits(resp, "try-error")){
     message(paste0("Request failed : could not get a response \n(",
                    resp[1], ")"))
-    #message(paste0("Request failed : ", resp[1]))
     return(NULL)
   }
 
-  res <- try(httr::content(resp, encoding = "UTF-8"), silent = TRUE)
+  if (http_type(resp) != "text/plain") {
+    message("Request failed : API did not return text", call. = FALSE)
+    return(NULL)
+  }
+
+  res <- try(httr::content(resp,
+                           as = "text",
+                           encoding = "UTF-8"),
+             silent = TRUE)
 
   if (!inherits(res, "character")){
     message("Request failed : could not read the response content")
