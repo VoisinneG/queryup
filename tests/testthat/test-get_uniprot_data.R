@@ -19,12 +19,6 @@ test_that("Query with a single UniProt identifier works", {
   if(!is.null(res)){
     expect_true(res$status>0)
   }
-  #
-  # if(res$status == 200){
-  #   expect_equal(res$content[["Entry"]], "P22682")
-  # }else{
-  #   expect_true(length(res$messages) > 0)
-  # }
 })
 
 test_that("Call with no 'columns' defined works", {
@@ -34,11 +28,6 @@ test_that("Call with no 'columns' defined works", {
   if(!is.null(res)){
     expect_true(res$status>0)
   }
-  # if(res$status == 200){
-  #   expect_equal(res$content[["Entry"]], ids)
-  # }else{
-  #   expect_true(length(res$messages) > 0)
-  # }
 })
 
 test_that("Basic query works", {
@@ -50,23 +39,11 @@ test_that("Basic query works", {
   if(!is.null(res)){
     expect_true(res$status>0)
   }
-
-  # if(res$status == 200){
-  #   expect_equal(is(res$content, "data.frame"), TRUE)
-  #   expect_equal("Entry" %in% names(res$content), TRUE)
-  #   expect_equal(dim(res$content)[1], length(ids))
-  #   expect_equal(setequal(res$content[["Entry"]], ids), TRUE)
-  # }else{
-  #   expect_true(length(res$messages) > 0)
-  # }
-
 })
 
-test_that("Query with incorrect base url fails with a message", {
+test_that("Query with incorrect base url produces with a message", {
   existing_ids <- c("P22682", "P47941")
   query <- list("accession_id" = existing_ids)
-  # res <- get_uniprot_data(query, base_url = "https://rest.uniprot.org/uni/")
-  # expect_equal(res$content, NULL)
   expect_message(get_uniprot_data(query,
                                   base_url = "https://rest.uniprot.org/uni/"))
 })
@@ -76,10 +53,7 @@ test_that("Query with unrecognized query fields fails with a message", {
   existing_ids <- c("P22682", "P47941")
   query <- list("acc_id" = existing_ids) # 'acc_id' is not a valid query field
   expect_message(get_uniprot_data(query))
-  # res <- get_uniprot_data(query)
-  # expect_true(res$status != 200)
-  # expect_true(length(res$messages) > 0)
-  # expect_equal(res$content, NULL)
+
 })
 
 test_that("Query with unrecognized field parameter fails with a message", {
@@ -87,10 +61,7 @@ test_that("Query with unrecognized field parameter fails with a message", {
   query <- list("accession_id" = ids)
   columns <- c("acc_id") # 'acc_id' is not a valid field parameter
   expect_message(get_uniprot_data(query, columns = columns))
-  # res <- get_uniprot_data(query, columns = columns)
-  # expect_true(res$status != 200)
-  # expect_true(length(res$messages) > 0)
-  # expect_equal(res$content, NULL)
+
 })
 
 test_that("Query with only non valid entries works", {
@@ -100,11 +71,6 @@ test_that("Query with only non valid entries works", {
   if(!is.null(res)){
     expect_true(res$status>0)
   }
-  # if(res$status == 200){
-  #   expect_equal(length(res$content$Entry), 0)
-  # }else{
-  #   expect_true(length(res$messages) > 0)
-  # }
 })
 
 test_that("Query with non valid entries for multiple query fields works", {
@@ -115,12 +81,6 @@ test_that("Query with non valid entries for multiple query fields works", {
   if(!is.null(res)){
     expect_true(res$status>0)
   }
-  # if(res$status == 200){
-  #   expect_equal(length(res$content$Entry), 0)
-  # }else{
-  #   expect_true(length(res$messages) > 0)
-  # }
-
 })
 
 test_that("Query with valid and invalid values work", {
@@ -133,12 +93,6 @@ test_that("Query with valid and invalid values work", {
   if(!is.null(res)){
     expect_true(res$status>0)
   }
-  # if(res$status == 200){
-  #   expect_true(setequal(res$content$Entry, valid_ids))
-  # }else{
-  #   expect_true(length(res$messages) > 0)
-  # }
-
 })
 
 test_that("Long queries work", {
@@ -149,10 +103,4 @@ test_that("Long queries work", {
   if(!is.null(res)){
     expect_true(res$status>0)
   }
-  # if(res$status == 200){
-  #   expect_true(setequal(res$content$Entry, ids))
-  # }else{
-  #   expect_true(length(res$messages) > 0)
-  # }
-
 })

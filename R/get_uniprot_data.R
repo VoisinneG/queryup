@@ -52,22 +52,24 @@ get_uniprot_data <- function(query = NULL,
     return(NULL)
   }
 
-  if (http_type(resp) != "application/json") {
-    message("Request failed : API did not return json", call. = FALSE)
+  if (httr::http_type(resp) != "application/json") {
+    message("Request failed : API did not return json")
     return(NULL)
   }
 
-  content <- jsonlite::fromJSON(content(resp,
+  content <- try(jsonlite::fromJSON(httr::content(resp,
                                         as = "text",
                                         encoding = "UTF-8"),
-                                simplifyVector = FALSE)
+                                simplifyVector = FALSE),
+                 silent = TRUE)
 
-  messages <- try(unlist(content$messages), silent = TRUE)
 
-  if (inherits(messages, "try-error")){
+  if (! inherits(content, "list")){
     message("Request failed : could not read the response content")
     return(NULL)
   }
+
+  messages <- unlist(content$messages)
 
   # check for invalid values and retry query without them
   df_invalid <- parse_messages(messages)
@@ -128,8 +130,8 @@ get_uniprot_data <- function(query = NULL,
     return(NULL)
   }
 
-  if (http_type(resp) != "text/plain") {
-    message("Request failed : API did not return text", call. = FALSE)
+  if (httr::http_type(resp) != "text/plain") {
+    message("Request failed : API did not return plain text")
     return(NULL)
   }
 

@@ -1,13 +1,8 @@
-test_that("Query with incorrect base url fails with a message", {
+test_that("Query with incorrect base url returns a message", {
   existing_ids <- c("P22682", "P47941")
   query <- list("accession_id" = existing_ids)
   expect_message(query_uniprot(query,
                                base_url = "https://rest.uniprot.org/uni/"))
-
-  # res <- query_uniprot(query, base_url = "https://rest.uniprot.org/uni/")
-  # expect_equal(res, NULL)
-  # expect_message(query_uniprot(query,
-  #                              base_url = "https://rest.uniprot.org/uni/"))
 })
 
 test_that("Long queries work", {
@@ -18,17 +13,10 @@ test_that("Long queries work", {
   if(!is.null(res)){
     expect_true(inherits(res, "data.frame"))
   }
-
-  # if(!is.null(res)){
-  #   expect_equal(setequal(res[["Entry"]], ids), TRUE)
-  # }else{
-  #   expect_message(query_uniprot(query))
-  # }
-
 })
 
 test_that("Long queries with no columns defined work", {
-  # query with 1000 entries
+  # query with 500 entries
   ids <- uniprot_entries$Entry[1:500]
   query <- list("accession_id" = ids)
   res <- query_uniprot(query, columns = NULL)
@@ -36,12 +24,6 @@ test_that("Long queries with no columns defined work", {
   if(!is.null(res)){
     expect_true(inherits(res, "data.frame"))
   }
-
-  # if(!is.null(res)){
-  #   expect_equal(setequal(res[["Entry"]], ids), TRUE)
-  # }else{
-  #   expect_message(query_uniprot(query))
-  # }
 })
 
 
@@ -54,12 +36,6 @@ test_that("Short queries work", {
   if(!is.null(res)){
     expect_true(inherits(res, "data.frame"))
   }
-
-  # if(!is.null(res)){
-  #   expect_equal(setequal(res[["Entry"]], ids), TRUE)
-  # }else{
-  #   expect_message(query_uniprot(query))
-  # }
 })
 
 test_that("Setting 'max_keys' above 200 produces a message", {
@@ -76,11 +52,4 @@ test_that("Query works when multiple fields have more than 'max_keys=200' items"
   if(!is.null(res)){
     expect_true(inherits(res, "data.frame"))
   }
-
-  # if(!is.null(res)){
-  #   expect_equal(is(res, "data.frame"), TRUE)
-  # }else{
-  #   query_uniprot(query, max_keys = 200,
-  #                 columns = c("accession", "cc_interaction"))
-  # }
 })
