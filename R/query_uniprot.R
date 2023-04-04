@@ -25,7 +25,8 @@
 #'
 #' @examples
 #' # Get the UniProt entries of all proteins encoded by gene Pik3r1
-#' query <- list("gene_exact" = "Pik3r1")
+#' ids <- c("P22682", "P47941")
+#' query = list("accession_id" = ids)
 #' df <-  query_uniprot(query = query)
 #' head(df)
 query_uniprot <- function(query = NULL,
