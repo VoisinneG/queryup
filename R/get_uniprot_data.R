@@ -52,10 +52,21 @@ get_uniprot_data <- function(query = NULL,
     return(NULL)
   }
 
-  if (httr::http_type(resp) != "application/json") {
+  # Check response type
+
+  resp_type <- try(httr::http_type(resp), silent = TRUE)
+
+  if (inherits(resp_type, "try-error")){
+    message(paste0("Request failed : (", resp[1], ")"))
+    return(NULL)
+  }
+
+  if (resp_type != "application/json") {
     message("Request failed : API did not return json")
     return(NULL)
   }
+
+  # Parse the response
 
   content <- try(jsonlite::fromJSON(httr::content(resp,
                                         as = "text",
@@ -72,6 +83,7 @@ get_uniprot_data <- function(query = NULL,
   messages <- unlist(content$messages)
 
   # check for invalid values and retry query without them
+
   df_invalid <- parse_messages(messages)
 
   if (!is.null(df_invalid)) {
@@ -89,6 +101,7 @@ get_uniprot_data <- function(query = NULL,
   if(request_status_code != 200){
 
     # get message corresponding to request status
+
     http_message <- request_status$message
 
     # print an additional informative error message
@@ -122,7 +135,7 @@ get_uniprot_data <- function(query = NULL,
                               columns = columns,
                               format = "tsv")
 
-  resp <- try(httr::GET(full_url), silent = TRUE)
+  resp <- try(httr::GET(full_url, ), silent = TRUE)
 
   if (inherits(resp, "try-error")){
     message(paste0("Request failed : could not get a response \n(",
@@ -130,10 +143,21 @@ get_uniprot_data <- function(query = NULL,
     return(NULL)
   }
 
-  if (httr::http_type(resp) != "text/plain") {
+  # Check response type
+
+  resp_type <- try(httr::http_type(resp), silent = TRUE)
+
+  if (inherits(resp_type, "try-error")){
+    message(paste0("Request failed : (", resp[1], ")"))
+    return(NULL)
+  }
+
+  if (resp_type != "text/plain") {
     message("Request failed : API did not return plain text")
     return(NULL)
   }
+
+  # Parse the response
 
   res <- try(httr::content(resp,
                            as = "text",
