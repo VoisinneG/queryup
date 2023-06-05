@@ -1,3 +1,7 @@
+# queryup 1.0.5
+
+* Handling of possible errors when using `httr::http_type()` for long queries
+
 # queryup 1.0.4
 
 * Handling of possible errors when using `httr::content()`
